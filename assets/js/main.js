@@ -303,3 +303,17 @@ class ParticleSystem {
 window.addEventListener('load', () => {
     new ParticleSystem();
 });
+
+// Tab change title handler
+let originalTitle = document.title;
+let hiddenTitle = 'Geri Gel! 😢';
+
+document.addEventListener('visibilitychange', function() {
+    if (document.hidden) {
+        // Tab switched away - change title
+        document.title = hiddenTitle;
+    } else {
+        // Tab is back - restore original title
+        document.title = originalTitle;
+    }
+});
