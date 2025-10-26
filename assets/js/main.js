@@ -61,8 +61,8 @@ document.addEventListener('dragstart', function(e) {
 const themeBtn = document.getElementById('themeBtn');
 const body = document.body;
 
-// Kaydedilmiş tema tercihini yükle (varsayılan: light)
-const theme = localStorage.getItem('theme') || 'light';
+// Kaydedilmiş tema tercihini yükle (varsayılan: dark)
+const theme = localStorage.getItem('theme') || 'dark';
 if (theme === 'dark') {
     body.classList.add('dark');
     themeBtn.textContent = '☀️'; // Güneş ikonu (dark mod aktif)
