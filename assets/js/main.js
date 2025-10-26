@@ -1,6 +1,19 @@
 // Initialize Lucide icons
 lucide.createIcons();
 
+// Tab change title handler - declared early
+let originalTitle = document.title;
+const hiddenTitles = {
+    tr: 'Geri Gel! 🧐',
+    en: 'Come Back! 🧐'
+};
+
+// Function to get current hidden title based on language
+function getCurrentHiddenTitle() {
+    const currentLang = document.body.classList.contains('lang-en') ? 'en' : 'tr';
+    return hiddenTitles[currentLang];
+}
+
 // Security: Disable right-click, F12, and developer tools
 document.addEventListener('contextmenu', function(e) {
     e.preventDefault();
@@ -135,6 +148,7 @@ trBtn.addEventListener('click', () => {
     const title = document.querySelector('title');
     if (title) {
         title.textContent = title.getAttribute('data-tr');
+        originalTitle = title.textContent;
     }
     
     localStorage.setItem('language', 'tr');
@@ -150,6 +164,7 @@ enBtn.addEventListener('click', () => {
     const title = document.querySelector('title');
     if (title) {
         title.textContent = title.getAttribute('data-en');
+        originalTitle = title.textContent;
     }
     
     localStorage.setItem('language', 'en');
@@ -302,16 +317,16 @@ class ParticleSystem {
 // Initialize particle system when page loads
 window.addEventListener('load', () => {
     new ParticleSystem();
+    
+    // Update original title after page loads
+    originalTitle = document.title;
 });
 
-// Tab change title handler
-let originalTitle = document.title;
-let hiddenTitle = 'Geri Gel! 😢';
-
+// Visibility change event handler
 document.addEventListener('visibilitychange', function() {
     if (document.hidden) {
         // Tab switched away - change title
-        document.title = hiddenTitle;
+        document.title = getCurrentHiddenTitle();
     } else {
         // Tab is back - restore original title
         document.title = originalTitle;
