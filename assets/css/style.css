@@ -1,89 +1,117 @@
+/* ========================================
+   GLOBAL RESET & BASE STYLES
+   ======================================== */
+/* Tüm HTML elementlerinin margin, padding ve box-sizing değerlerini sıfırla */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+/* ========================================
+   CSS VARIABLES (LIGHT THEME)
+   ======================================== */
+/* Light mod renk paletini tanımla */
 :root {
-    --bg: #fafafa;
-    --text: #0a0a0a;
-    --text-muted: #666;
-    --border: #e5e5e5;
-    --hover: #f5f5f5;
-    --accent: #0a0a0a;
+    --bg: #fafafa;          /* Arka plan rengi */
+    --text: #0a0a0a;        /* Ana metin rengi */
+    --text-muted: #666;     /* Soluk metin rengi */
+    --border: #e5e5e5;      /* Kenarlık rengi */
+    --hover: #f5f5f5;       /* Hover durumu rengi */
+    --accent: #0a0a0a;      /* Vurgu rengi */
 }
 
+/* ========================================
+   BODY STYLES
+   ======================================== */
+/* Ana sayfa body stilleri */
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; /* Sistem fontları */
     background: var(--bg);
     color: var(--text);
-    min-height: 100vh;
-    height: 100vh;
+    min-height: 100vh;     /* Minimum yükseklik */
+    height: 100vh;         /* Tam ekran yüksekliği */
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     padding: 16px;
-    transition: background-color 0.3s, color 0.3s;
-    overflow: hidden;
+    transition: background-color 0.3s, color 0.3s; /* Geçiş animasyonları */
+    overflow: hidden;      /* Taşan içeriği gizle */
+    user-select: none;     /* Metin seçimini engelle */
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
-    user-select: none;
     -webkit-touch-callout: none;
     -webkit-tap-highlight-color: transparent;
 }
 
+/* ========================================
+   PARTICLE CANVAS
+   ======================================== */
+/* Partikül animasyon canvas'ı */
 #particleCanvas {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    pointer-events: none;
-    z-index: 1;
-    opacity: 0.6;
+    pointer-events: none;  /* Tıklamalardan etkilenmesin */
+    z-index: 1;            /* Arka planda kal */
+    opacity: 0.6;          /* %60 şeffaflık */
 }
 
+/* ========================================
+   MAIN WRAPPER
+   ======================================== */
+/* Ana içerik container'ı */
 .wrapper {
     max-width: 320px;
     width: 100%;
     display: flex;
     flex-direction: column;
-    max-height: calc(100vh - 32px);
-    overflow-y: auto;
+    max-height: calc(100vh - 32px); /* Dikey padding hesaplaması */
+    overflow-y: auto;     /* Dikey scroll */
     overflow-x: hidden;
     position: relative;
-    z-index: 2;
+    z-index: 2;           /* Partiküllerin üstünde */
 }
 
+/* ========================================
+   HEADER SECTION
+   ======================================== */
+/* Üst profil bölümü */
 .header {
     text-align: center;
     margin-bottom: 20px;
 }
 
+/* Profil fotoğrafı */
 .avatar {
     width: 64px;
     height: 64px;
-    border-radius: 50%;
+    border-radius: 50%;  /* Dairesel */
     object-fit: cover;
     margin-bottom: 12px;
     border: 1px solid var(--border);
 }
 
+/* İsim */
 .name {
     font-size: 18px;
     font-weight: 600;
     margin-bottom: 4px;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.02em; /* Karakter aralığı */
 }
 
+/* Bio (meslek) */
 .bio {
     font-size: 13px;
     color: var(--text-muted);
     margin-bottom: 12px;
 }
 
+/* Açıklama metni */
 .description {
     font-size: 12px;
     color: var(--text-muted);
@@ -92,12 +120,17 @@ body {
     margin: 0 auto;
 }
 
+/* ========================================
+   LINKS SECTION
+   ======================================== */
+/* Sosyal medya linkleri container */
 .links {
     display: grid;
     gap: 10px;
     margin-bottom: 16px;
 }
 
+/* Her bir link butonu */
 .link {
     display: flex;
     align-items: center;
@@ -109,59 +142,72 @@ body {
     color: var(--text);
     font-size: 13px;
     font-weight: 500;
-    transition: all 0.2s;
+    transition: all 0.2s;  /* Hover animasyonu */
     background: var(--bg);
 }
 
+/* Link içindeki span */
 .link span {
     white-space: nowrap;
     letter-spacing: normal;
     font-kerning: auto;
 }
 
-/* CSS-based language switching */
+/* ========================================
+   LANGUAGE SWITCHING (CSS)
+   ======================================== */
+/* CSS tabanlı dil değiştirme sistemi */
 [data-tr]:before {
-    content: attr(data-tr);
+    content: attr(data-tr); /* Türkçe içeriği göster */
 }
 
+/* İngilizce seçildiğinde */
 .lang-en [data-tr]:before {
-    content: attr(data-en);
+    content: attr(data-en); /* İngilizce içeriği göster */
 }
 
-/* Hide original text when using CSS content */
+/* Orijinal metni gizle (CSS content kullanılırken) */
 .lang-tr [data-tr],
 .lang-en [data-tr] {
     font-size: 0;
 }
 
+/* CSS content ile oluşturulan metni göster */
 .lang-tr [data-tr]:before,
 .lang-en [data-tr]:before {
     font-size: 13px;
 }
 
-
+/* ========================================
+   LINK INTERACTIONS
+   ======================================== */
+/* Hover efekti */
 .link:hover {
     background: var(--hover);
     border-color: var(--accent);
 }
 
+/* Aktif/click durumu */
 .link:active {
-    transform: scale(0.98);
+    transform: scale(0.98); /* Hafif küçülme efekti */
 }
 
+/* Linkin sol tarafı (ikon + yazı) */
 .link-left {
     display: flex;
     align-items: center;
     gap: 10px;
 }
 
+/* Link ikonları */
 .link-icon {
     width: 18px;
     height: 18px;
     stroke-width: 2;
-    flex-shrink: 0;
+    flex-shrink: 0; /* Küçülmesin */
 }
 
+/* Link ok ikonu */
 .link-arrow {
     width: 16px;
     height: 16px;
@@ -171,10 +217,15 @@ body {
     flex-shrink: 0;
 }
 
+/* Hover'da ok ikonu sağa kayar */
 .link:hover .link-arrow {
     transform: translateX(3px);
 }
 
+/* ========================================
+   THEME BUTTON
+   ======================================== */
+/* Tema değiştirme butonu (sağ üst) */
 .theme-btn {
     position: fixed;
     top: 16px;
@@ -190,14 +241,19 @@ body {
     align-items: center;
     justify-content: center;
     transition: all 0.2s;
-    z-index: 10;
+    z-index: 10; /* Diğer elementlerin üstünde */
 }
 
+/* Hover efekti */
 .theme-btn:hover {
     background: var(--hover);
     border-color: var(--accent);
 }
 
+/* ========================================
+   LANGUAGE BUTTONS
+   ======================================== */
+/* Dil değiştirme butonları container (sol üst) */
 .language-switcher {
     position: fixed;
     top: 16px;
@@ -207,6 +263,7 @@ body {
     z-index: 10;
 }
 
+/* Her bir dil butonu */
 .lang-btn {
     width: 32px;
     height: 32px;
@@ -223,18 +280,24 @@ body {
     transition: all 0.2s;
 }
 
+/* Hover efekti */
 .lang-btn:hover {
     background: var(--hover);
     border-color: var(--accent);
     color: var(--text);
 }
 
+/* Aktif dil butonu */
 .lang-btn.active {
     background: var(--accent);
     color: var(--bg);
     border-color: var(--accent);
 }
 
+/* ========================================
+   FOOTER
+   ======================================== */
+/* Alt telif hakkı bölümü */
 .footer {
     text-align: center;
     font-size: 11px;
@@ -242,17 +305,23 @@ body {
     padding-top: 12px;
 }
 
-/* Dark theme */
+/* ========================================
+   DARK THEME
+   ======================================== */
+/* Dark mod renk paleti */
 body.dark {
-    --bg: #0a0a0a;
-    --text: #fafafa;
-    --text-muted: #999;
-    --border: #1f1f1f;
-    --hover: #151515;
-    --accent: #fafafa;
+    --bg: #0a0a0a;           /* Koyu arka plan */
+    --text: #fafafa;         /* Açık metin */
+    --text-muted: #999;      /* Soluk metin */
+    --border: #1f1f1f;       /* Koyu kenarlık */
+    --hover: #151515;        /* Hover rengi */
+    --accent: #fafafa;       /* Açık vurgu rengi */
 }
 
-/* Responsive */
+/* ========================================
+   RESPONSIVE (MOBILE)
+   ======================================== */
+/* Mobil cihazlar için (480px ve altı) */
 @media (max-width: 480px) {
     body {
         padding: 12px;
@@ -267,12 +336,14 @@ body.dark {
         margin-bottom: 16px;
     }
 
+    /* Profil fotoğrafı küçük ekranda */
     .avatar {
         width: 56px;
         height: 56px;
         margin-bottom: 10px;
     }
 
+    /* Font boyutları küçültülür */
     .name {
         font-size: 16px;
     }
@@ -286,6 +357,7 @@ body.dark {
         font-size: 11px;
     }
 
+    /* Link aralıkları ayarlanır */
     .links {
         gap: 8px;
         margin-bottom: 12px;
@@ -296,6 +368,7 @@ body.dark {
         font-size: 12px;
     }
 
+    /* İkonlar küçültülür */
     .link-icon {
         width: 16px;
         height: 16px;
@@ -311,6 +384,7 @@ body.dark {
         padding-top: 10px;
     }
 
+    /* Butonlar küçük ekranda */
     .theme-btn {
         top: 12px;
         right: 12px;
@@ -333,16 +407,22 @@ body.dark {
     }
 }
 
+/* ========================================
+   RESPONSIVE (SHORT SCREENS)
+   ======================================== */
+/* Kısa ekranlar için (700px yükseklik ve altı) */
 @media (max-height: 700px) {
     .header {
         margin-bottom: 12px;
     }
 
+    /* Profil fotoğrafı daha da küçük */
     .avatar {
         width: 52px;
         height: 52px;
     }
 
+    /* Link aralıkları daha dar */
     .links {
         gap: 4px;
     }

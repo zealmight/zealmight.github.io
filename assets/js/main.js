@@ -1,71 +1,90 @@
-// Initialize Lucide icons
+/* ========================================
+   ICON SYSTEM
+   ======================================== */
+// Lucide icon kütüphanesini başlatır ve SVG ikonları render eder
 lucide.createIcons();
 
-// Tab change title handler - declared early
-let originalTitle = document.title;
+/* ========================================
+   TAB TITLE MANAGEMENT
+   ======================================== */
+// Sekme değiştiğinde title'ı değiştirmek için kullanılan değişkenler
+let originalTitle = document.title; // Orijinal başlık (dil değişikliklerinde güncellenir)
 const hiddenTitles = {
-    tr: 'Geri Gel! 🧐',
-    en: 'Come Back! 🧐'
+    tr: 'Geri Gel! 🧐',  // Türkçe: Sekme arkaplanda iken gösterilen başlık
+    en: 'Come Back! 🧐'  // İngilizce: Sekme arkaplanda iken gösterilen başlık
 };
 
-// Function to get current hidden title based on language
+// Mevcut dile göre gizlenmiş başlığı döndürür
 function getCurrentHiddenTitle() {
     const currentLang = document.body.classList.contains('lang-en') ? 'en' : 'tr';
     return hiddenTitles[currentLang];
 }
 
-// Security: Disable right-click, F12, and developer tools
+/* ========================================
+   SECURITY FEATURES
+   ======================================== */
+// Sağ tıklamayı devre dışı bırakır (sahte güvenlik önlemi)
 document.addEventListener('contextmenu', function(e) {
     e.preventDefault();
     return false;
 });
 
+// Developer tools ve bazı klavye kısayollarını devre dışı bırakır
+// F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U, Ctrl+Shift+C tuşlarını engeller
 document.addEventListener('keydown', function(e) {
-    // Disable F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U, Ctrl+Shift+C
-    if (e.keyCode === 123 || // F12
-        (e.ctrlKey && e.shiftKey && e.keyCode === 73) || // Ctrl+Shift+I
-        (e.ctrlKey && e.shiftKey && e.keyCode === 74) || // Ctrl+Shift+J
-        (e.ctrlKey && e.keyCode === 85) || // Ctrl+U
-        (e.ctrlKey && e.shiftKey && e.keyCode === 67)) { // Ctrl+Shift+C
+    if (e.key === 'F12' || 
+        (e.ctrlKey && e.shiftKey && e.key === 'I') || 
+        (e.ctrlKey && e.shiftKey && e.key === 'J') || 
+        (e.ctrlKey && e.key === 'u') || 
+        (e.ctrlKey && e.shiftKey && e.key === 'C')) {
         e.preventDefault();
         return false;
     }
 });
 
-// Disable text selection
+// Metin seçimini devre dışı bırakır
 document.addEventListener('selectstart', function(e) {
     e.preventDefault();
     return false;
 });
 
-// Disable drag
+// Sürükle-bırak (drag) işlemini devre dışı bırakır
 document.addEventListener('dragstart', function(e) {
     e.preventDefault();
     return false;
 });
 
+/* ========================================
+   THEME SWITCHER
+   ======================================== */
+// Tema değiştirme butonu ve localStorage'dan tema tercihini yükler
 const themeBtn = document.getElementById('themeBtn');
 const body = document.body;
 
+// Kaydedilmiş tema tercihini yükle (varsayılan: light)
 const theme = localStorage.getItem('theme') || 'light';
 if (theme === 'dark') {
     body.classList.add('dark');
-    themeBtn.textContent = '☀️';
+    themeBtn.textContent = '☀️'; // Güneş ikonu (dark mod aktif)
 }
 
+// Tema butonuna tıklandığında light/dark mod arasında geçiş yapar
 themeBtn.addEventListener('click', () => {
     body.classList.toggle('dark');
     const isDark = body.classList.contains('dark');
-    themeBtn.textContent = isDark ? '☀️' : '🌙';
-    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    themeBtn.textContent = isDark ? '☀️' : '🌙'; // İkonu güncelle
+    localStorage.setItem('theme', isDark ? 'dark' : 'light'); // Tercihi kaydet
 });
 
-// Language switching functionality
+/* ========================================
+   LANGUAGE SWITCHER
+   ======================================== */
+// Dil değiştirme butonları ve localStorage'dan dil tercihini yükler
 const trBtn = document.getElementById('trBtn');
 const enBtn = document.getElementById('enBtn');
 const htmlElement = document.documentElement;
 
-// Get saved language or default to Turkish
+// Kaydedilmiş dil tercihini yükle (varsayılan: Türkçe)
 const savedLanguage = localStorage.getItem('language') || 'tr';
 document.body.classList.add(`lang-${savedLanguage}`);
 if (savedLanguage === 'tr') {
@@ -74,36 +93,45 @@ if (savedLanguage === 'tr') {
     enBtn.classList.add('active');
 }
 
-// Set initial title
+// Başlangıç başlığını ayarla
 const title = document.querySelector('title');
 if (title) {
     title.textContent = title.getAttribute(`data-${savedLanguage}`);
 }
 
+// Sayfa yüklendiğinde dil ayarını uygula
 setLanguage(savedLanguage);
 
+/* ========================================
+   LANGUAGE MANAGEMENT FUNCTION
+   ======================================== */
+// Dil değişikliği işlemlerini yönetir
 function setLanguage(lang) {
-    // Update HTML lang attribute
+    // HTML lang attribute'unu güncelle (SEO ve accessibility için)
     htmlElement.setAttribute('lang', lang);
     
-    // Update button states
+    // Body'ye lang class'ı ekle (CSS dil değişimi için)
+    document.body.classList.remove('lang-tr', 'lang-en');
+    document.body.classList.add(`lang-${lang}`);
+    
+    // Buton durumlarını güncelle (aktif buton vurgusu)
     trBtn.classList.toggle('active', lang === 'tr');
     enBtn.classList.toggle('active', lang === 'en');
     
-    // ONLY update elements that actually need translation
-    // Bio
+    // ÇEVIRILMESI GEREKEN ELEMENLER
+    // Bio bölümünü çevir
     const bio = document.querySelector('.bio');
     if (bio && bio.hasAttribute('data-tr') && bio.hasAttribute('data-en')) {
         bio.textContent = bio.getAttribute(`data-${lang}`);
     }
     
-    // Description
+    // Açıklama bölümünü çevir
     const description = document.querySelector('.description');
     if (description && description.hasAttribute('data-tr') && description.hasAttribute('data-en')) {
         description.textContent = description.getAttribute(`data-${lang}`);
     }
     
-    // Email span - use more specific selector
+    // Email butonundaki metni çevir
     const emailLink = document.querySelector('a[href^="mailto:"]');
     if (emailLink) {
         const emailSpan = emailLink.querySelector('span[data-tr]');
@@ -112,19 +140,20 @@ function setLanguage(lang) {
         }
     }
     
-    // Footer
+    // Footer metnini çevir
     const footerSpan = document.querySelector('.footer span');
     if (footerSpan && footerSpan.hasAttribute('data-tr') && footerSpan.hasAttribute('data-en')) {
         footerSpan.textContent = footerSpan.getAttribute(`data-${lang}`);
     }
     
-    // Title
+    // Sayfa başlığını çevir
     const title = document.querySelector('title');
     if (title && title.hasAttribute('data-tr') && title.hasAttribute('data-en')) {
         title.textContent = title.getAttribute(`data-${lang}`);
+        originalTitle = title.textContent; // Tab değişimi için güncelle
     }
     
-    // Meta tags
+    // Meta etiketlerini çevir (SEO)
     const metaTags = document.querySelectorAll('meta[data-tr][data-en]');
     metaTags.forEach(meta => {
         const text = meta.getAttribute(`data-${lang}`);
@@ -133,50 +162,33 @@ function setLanguage(lang) {
         }
     });
     
-    // Save language preference
+    // Dil tercihini kaydet
     localStorage.setItem('language', lang);
 }
 
-// Add event listeners for language buttons
+/* ========================================
+   LANGUAGE BUTTON EVENT LISTENERS
+   ======================================== */
+// Türkçe butonuna tıklama eventi
 trBtn.addEventListener('click', () => {
-    document.body.classList.remove('lang-en');
-    document.body.classList.add('lang-tr');
-    trBtn.classList.add('active');
-    enBtn.classList.remove('active');
-    
-    // Update title
-    const title = document.querySelector('title');
-    if (title) {
-        title.textContent = title.getAttribute('data-tr');
-        originalTitle = title.textContent;
-    }
-    
-    localStorage.setItem('language', 'tr');
+    setLanguage('tr');
 });
 
+// İngilizce butonuna tıklama eventi
 enBtn.addEventListener('click', () => {
-    document.body.classList.remove('lang-tr');
-    document.body.classList.add('lang-en');
-    enBtn.classList.add('active');
-    trBtn.classList.remove('active');
-    
-    // Update title
-    const title = document.querySelector('title');
-    if (title) {
-        title.textContent = title.getAttribute('data-en');
-        originalTitle = title.textContent;
-    }
-    
-    localStorage.setItem('language', 'en');
+    setLanguage('en');
 });
 
-// Particle Effect System
+/* ========================================
+   PARTICLE EFFECT SYSTEM
+   ======================================== */
+// Arkaplan partikül animasyonu sistemi
 class ParticleSystem {
     constructor() {
         this.canvas = document.getElementById('particleCanvas');
         this.ctx = this.canvas.getContext('2d');
         this.particles = [];
-        this.particleCount = 50;
+        this.particleCount = 50; // Ekrandaki partikül sayısı
         this.mouse = { x: 0, y: 0 };
         
         this.init();
@@ -189,19 +201,21 @@ class ParticleSystem {
         this.createParticles();
     }
     
+    // Canvas boyutunu ekran boyutuna göre ayarla
     resize() {
         this.canvas.width = window.innerWidth;
         this.canvas.height = window.innerHeight;
     }
     
+    // Rastgele partiküller oluştur
     createParticles() {
         this.particles = [];
         for (let i = 0; i < this.particleCount; i++) {
             this.particles.push({
                 x: Math.random() * this.canvas.width,
                 y: Math.random() * this.canvas.height,
-                vx: (Math.random() - 0.5) * 0.5,
-                vy: (Math.random() - 0.5) * 0.5,
+                vx: (Math.random() - 0.5) * 0.5, // X hızı
+                vy: (Math.random() - 0.5) * 0.5, // Y hızı
                 size: Math.random() * 2 + 1,
                 opacity: Math.random() * 0.5 + 0.2,
                 originalOpacity: Math.random() * 0.5 + 0.2
@@ -209,6 +223,7 @@ class ParticleSystem {
         }
     }
     
+    // Mevcut tema rengine göre partikül renklerini döndür
     getThemeColors() {
         const isDark = document.body.classList.contains('dark');
         return {
@@ -217,15 +232,16 @@ class ParticleSystem {
         };
     }
     
+    // Partiküllerin pozisyonlarını ve hızlarını güncelle
     updateParticles() {
         const colors = this.getThemeColors();
         
         this.particles.forEach(particle => {
-            // Update position
+            // Pozisyonu hıza göre güncelle
             particle.x += particle.vx;
             particle.y += particle.vy;
             
-            // Bounce off edges
+            // Kenarlarda sektir (ters yönde hareket et)
             if (particle.x < 0 || particle.x > this.canvas.width) {
                 particle.vx *= -1;
             }
@@ -233,34 +249,36 @@ class ParticleSystem {
                 particle.vy *= -1;
             }
             
-            // Keep particles within bounds
+            // Partikülleri sınırlar içinde tut
             particle.x = Math.max(0, Math.min(this.canvas.width, particle.x));
             particle.y = Math.max(0, Math.min(this.canvas.height, particle.y));
             
-            // Subtle mouse interaction
+            // Fare etkileşimi (100px menzil içinde)
             const dx = this.mouse.x - particle.x;
             const dy = this.mouse.y - particle.y;
             const distance = Math.sqrt(dx * dx + dy * dy);
             
             if (distance < 100) {
+                // Fare yakınlığına göre partikülü etkile
                 const force = (100 - distance) / 100;
                 particle.vx -= (dx / distance) * force * 0.01;
                 particle.vy -= (dy / distance) * force * 0.01;
-                particle.opacity = particle.originalOpacity + force * 0.3;
+                particle.opacity = particle.originalOpacity + force * 0.3; // Parlaklık artışı
             } else {
                 particle.opacity = particle.originalOpacity;
             }
             
-            // Limit velocity
+            // Hızı sınırla (çok hızlı hareket etmesini engelle)
             particle.vx = Math.max(-1, Math.min(1, particle.vx));
             particle.vy = Math.max(-1, Math.min(1, particle.vy));
         });
     }
     
+    // Partikülleri ve bağlantıları çiz
     drawParticles() {
         const colors = this.getThemeColors();
         
-        // Draw particles
+        // Partikülleri çiz (küçük daireler)
         this.particles.forEach(particle => {
             this.ctx.beginPath();
             this.ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
@@ -268,15 +286,16 @@ class ParticleSystem {
             this.ctx.fill();
         });
         
-        // Draw connections between nearby particles
+        // Birbirine yakın partiküller arasında çizgiler çiz (network efekti)
         for (let i = 0; i < this.particles.length; i++) {
             for (let j = i + 1; j < this.particles.length; j++) {
                 const dx = this.particles[i].x - this.particles[j].x;
                 const dy = this.particles[i].y - this.particles[j].y;
                 const distance = Math.sqrt(dx * dx + dy * dy);
                 
+                // 120px menzil içindeki partiküller arasında çizgi çiz
                 if (distance < 120) {
-                    const opacity = (120 - distance) / 120 * 0.1;
+                    const opacity = (120 - distance) / 120 * 0.1; // Mesafeye göre şeffaflık
                     this.ctx.beginPath();
                     this.ctx.moveTo(this.particles[i].x, this.particles[i].y);
                     this.ctx.lineTo(this.particles[j].x, this.particles[j].y);
@@ -288,25 +307,29 @@ class ParticleSystem {
         }
     }
     
+    // Animasyon döngüsü
     animate() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.updateParticles();
         this.drawParticles();
-        requestAnimationFrame(() => this.animate());
+        requestAnimationFrame(() => this.animate()); // Sonraki frame'i bekle
     }
     
+    // Event listener'ları bağla
     bindEvents() {
+        // Ekran boyutu değiştiğinde canvas'ı yeniden boyutlandır
         window.addEventListener('resize', () => {
             this.resize();
             this.createParticles();
         });
         
+        // Fare hareketini takip et
         window.addEventListener('mousemove', (e) => {
             this.mouse.x = e.clientX;
             this.mouse.y = e.clientY;
         });
         
-        // Reset mouse position when leaving the window
+        // Fare sayfadan çıktığında pozisyonu resetle
         window.addEventListener('mouseleave', () => {
             this.mouse.x = -1000;
             this.mouse.y = -1000;
@@ -314,21 +337,27 @@ class ParticleSystem {
     }
 }
 
-// Initialize particle system when page loads
+/* ========================================
+   INITIALIZATION
+   ======================================== */
+// Sayfa yüklendiğinde partikül sistemini başlat
 window.addEventListener('load', () => {
     new ParticleSystem();
     
-    // Update original title after page loads
+    // Orijinal başlığı güncelle (tab değişimi için)
     originalTitle = document.title;
 });
 
-// Visibility change event handler
+/* ========================================
+   TAB VISIBILITY HANDLER
+   ======================================== */
+// Sekme değişikliğini dinle ve başlığı güncelle
 document.addEventListener('visibilitychange', function() {
     if (document.hidden) {
-        // Tab switched away - change title
+        // Sekme arkaplanda - "Geri Gel!" başlığını göster
         document.title = getCurrentHiddenTitle();
     } else {
-        // Tab is back - restore original title
+        // Sekme görünür - orijinal başlığı geri yükle
         document.title = originalTitle;
     }
 });
