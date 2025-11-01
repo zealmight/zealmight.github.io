@@ -1,26 +1,28 @@
 /* ========================================
-   ICON SYSTEM
+   İKON SİSTEMİ
    ======================================== */
-// Lucide icon kütüphanesini başlatır ve SVG ikonları render eder
+
+// Lucide icon kütüphanesini başlat
 lucide.createIcons();
 
 /* ========================================
-   TAB TITLE MANAGEMENT
+   SEKME BAŞLIĞI YÖNETİMİ
    ======================================== */
-// Sekme değiştiğinde title'ı değiştirmek için kullanılan değişkenler
-let originalTitle = document.title; // Orijinal başlık (dil değişikliklerinde güncellenir)
+
+// Sekme arkaplanda iken gösterilecek başlıklar
+let originalTitle = document.title;
 const hiddenTitles = {
     personal: {
-        tr: 'Geri Gel! 🧐',  // Türkçe: Sekme arkaplanda iken gösterilen başlık (Kişisel mod)
-        en: 'Come Back! 🧐'  // İngilizce: Sekme arkaplanda iken gösterilen başlık (Kişisel mod)
+        tr: 'Geri Gel! 🧐',
+        en: 'Come Back! 🧐'
     },
     gamer: {
-        tr: 'Oyuna Geri Dön! 🎮',  // Türkçe: Sekme arkaplanda iken gösterilen başlık (Oyuncu mod)
-        en: 'Return to Game! 🎮'  // İngilizce: Sekme arkaplanda iken gösterilen başlık (Oyuncu mod)
+        tr: 'Oyuna Geri Dön! 🎮',
+        en: 'Return to Game! 🎮'
     }
 };
 
-// Mevcut dile ve moda göre gizlenmiş başlığı döndürür
+// Mevcut mod ve dile göre başlık döndür
 function getCurrentHiddenTitle() {
     const currentLang = document.body.classList.contains('lang-en') ? 'en' : 'tr';
     const currentMode = document.body.classList.contains('gamer-mode-active') ? 'gamer' : 'personal';
@@ -28,70 +30,65 @@ function getCurrentHiddenTitle() {
 }
 
 /* ========================================
-   SECURITY FEATURES
+   GÜVENLİK ÖZELLİKLERİ
    ======================================== */
-// Sağ tıklamayı devre dışı bırakır (sahte güvenlik önlemi)
-document.addEventListener('contextmenu', function(e) {
-    e.preventDefault();
-    return false;
-});
 
-// Developer tools ve bazı klavye kısayollarını devre dışı bırakır
-// F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U, Ctrl+Shift+C tuşlarını engeller
-document.addEventListener('keydown', function(e) {
+// Sağ tıklama engelle
+document.addEventListener('contextmenu', (e) => e.preventDefault());
+
+// Developer tools kısayollarını engelle
+document.addEventListener('keydown', (e) => {
     if (e.key === 'F12' || 
-        (e.ctrlKey && e.shiftKey && e.key === 'I') || 
-        (e.ctrlKey && e.shiftKey && e.key === 'J') || 
-        (e.ctrlKey && e.key === 'u') || 
-        (e.ctrlKey && e.shiftKey && e.key === 'C')) {
+        (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) ||
+        (e.ctrlKey && e.key === 'u')) {
         e.preventDefault();
-        return false;
     }
 });
 
-// Metin seçimini devre dışı bırakır
-document.addEventListener('selectstart', function(e) {
-    e.preventDefault();
-    return false;
-});
+// Metin seçimini engelle
+document.addEventListener('selectstart', (e) => e.preventDefault());
 
-// Sürükle-bırak (drag) işlemini devre dışı bırakır
-document.addEventListener('dragstart', function(e) {
-    e.preventDefault();
-    return false;
-});
+// Drag & drop engelle
+document.addEventListener('dragstart', (e) => e.preventDefault());
 
 /* ========================================
-   THEME SWITCHER
+   TEMA DEĞİŞTİRİCİ
    ======================================== */
-// Tema değiştirme butonu ve localStorage'dan tema tercihini yükler
+
 const themeBtn = document.getElementById('themeBtn');
 const body = document.body;
 
-// Kaydedilmiş tema tercihini yükle (varsayılan: dark)
-const theme = localStorage.getItem('theme') || 'dark';
+// Kayıtlı tema tercihini yükle (varsayılan: dark - ilk ziyarette localStorage'a kaydetme)
+const savedTheme = localStorage.getItem('theme');
+const theme = savedTheme || 'dark'; // Varsayılan dark
+
+// Tema uygula
 if (theme === 'dark') {
     body.classList.add('dark');
-    themeBtn.textContent = '☀️'; // Güneş ikonu (dark mod aktif)
+    themeBtn.textContent = '☀️';
+} else {
+    body.classList.remove('dark');
+    themeBtn.textContent = '🌙';
 }
 
-// Tema butonuna tıklandığında light/dark mod arasında geçiş yapar
+// Tema butonuna tıklama
 themeBtn.addEventListener('click', () => {
     body.classList.toggle('dark');
     const isDark = body.classList.contains('dark');
-    themeBtn.textContent = isDark ? '☀️' : '🌙'; // İkonu güncelle
-    localStorage.setItem('theme', isDark ? 'dark' : 'light'); // Tercihi kaydet
+    themeBtn.textContent = isDark ? '☀️' : '🌙';
+    // Kullanıcı tercihini localStorage'a kaydet
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
 });
 
 /* ========================================
-   LANGUAGE SWITCHER
+   DİL DEĞİŞTİRİCİ
    ======================================== */
-// Dil değiştirme butonları ve localStorage'dan dil tercihini yükler
+
 const trBtn = document.getElementById('trBtn');
 const enBtn = document.getElementById('enBtn');
 const htmlElement = document.documentElement;
 
-// Kaydedilmiş dil tercihini yükle (varsayılan: Türkçe)
+// Kayıtlı dil tercihini yükle (varsayılan: Türkçe)
 const savedLanguage = localStorage.getItem('language') || 'tr';
 document.body.classList.add(`lang-${savedLanguage}`);
 if (savedLanguage === 'tr') {
@@ -106,99 +103,95 @@ if (title) {
     title.textContent = title.getAttribute(`data-${savedLanguage}`);
 }
 
-// Sayfa yüklendiğinde dil ayarını uygula
+// Dil ayarını uygula
 setLanguage(savedLanguage);
 
-/* ========================================
-   LANGUAGE MANAGEMENT FUNCTION
-   ======================================== */
-// Dil değişikliği işlemlerini yönetir
+// Dil değiştirme fonksiyonu
 function setLanguage(lang) {
-    // HTML lang attribute'unu güncelle (SEO ve accessibility için)
+    // HTML lang attribute güncelle
     htmlElement.setAttribute('lang', lang);
     
-    // Body'ye lang class'ı ekle (CSS dil değişimi için)
+    // Body class güncelle
     document.body.classList.remove('lang-tr', 'lang-en');
     document.body.classList.add(`lang-${lang}`);
     
-    // Buton durumlarını güncelle (aktif buton vurgusu)
+    // Buton durumları
     trBtn.classList.toggle('active', lang === 'tr');
     enBtn.classList.toggle('active', lang === 'en');
     
-    // ÇEVIRILMESI GEREKEN ELEMENLER
-    // Bio bölümünü çevir (her iki mod için)
-    const bios = document.querySelectorAll('.bio');
-    bios.forEach(bio => {
-        if (bio && bio.hasAttribute('data-tr') && bio.hasAttribute('data-en')) {
-            bio.textContent = bio.getAttribute(`data-${lang}`);
+    // Çevrilecek elementler
+    document.querySelectorAll('.bio, .description').forEach(el => {
+        if (el.hasAttribute('data-tr') && el.hasAttribute('data-en')) {
+            el.textContent = el.getAttribute(`data-${lang}`);
         }
     });
     
-    // Açıklama bölümünü çevir (her iki mod için)
-    const descriptions = document.querySelectorAll('.description');
-    descriptions.forEach(description => {
-        if (description && description.hasAttribute('data-tr') && description.hasAttribute('data-en')) {
-            description.textContent = description.getAttribute(`data-${lang}`);
-        }
-    });
-    
-    // Email butonundaki metni çevir
-    const emailLink = document.querySelector('a[href^="mailto:"]');
-    if (emailLink) {
-        const emailSpan = emailLink.querySelector('span[data-tr]');
-        if (emailSpan) {
-            emailSpan.textContent = emailSpan.getAttribute(`data-${lang}`);
-        }
+    // Email butonu metni
+    const emailSpan = document.querySelector('a[href^="mailto:"] span[data-tr]');
+    if (emailSpan) {
+        emailSpan.textContent = emailSpan.getAttribute(`data-${lang}`);
     }
     
-    // Footer metnini çevir (her iki mod için)
-    const footerSpans = document.querySelectorAll('.footer span[data-tr]');
-    footerSpans.forEach(footerSpan => {
-        if (footerSpan && footerSpan.hasAttribute('data-tr') && footerSpan.hasAttribute('data-en')) {
-            footerSpan.textContent = footerSpan.getAttribute(`data-${lang}`);
+    // Footer metni
+    document.querySelectorAll('.footer span[data-tr]').forEach(el => {
+        if (el.hasAttribute('data-tr') && el.hasAttribute('data-en')) {
+            el.textContent = el.getAttribute(`data-${lang}`);
         }
     });
     
-    // Sayfa başlığını çevir (moda göre)
+    // Başlık ve meta etiketlerini güncelle
     updateTitleForMode();
+    updateMetaTags(lang);
     
-    // Meta etiketlerini çevir (SEO)
-    const metaTags = document.querySelectorAll('meta[data-tr][data-en]');
-    metaTags.forEach(meta => {
-        const text = meta.getAttribute(`data-${lang}`);
-        if (text) {
-            meta.setAttribute('content', text);
-        }
-    });
-    
-    // Dil tercihini kaydet
+    // Tercihi kaydet
     localStorage.setItem('language', lang);
 }
 
-/* ========================================
-   LANGUAGE BUTTON EVENT LISTENERS
-   ======================================== */
-// Türkçe butonuna tıklama eventi
-trBtn.addEventListener('click', () => {
-    setLanguage('tr');
-});
+// Meta etiketlerini güncelle
+function updateMetaTags(lang) {
+    const currentMode = document.body.classList.contains('gamer-mode-active') ? 'gamer' : 'personal';
+    const attr = `data-${lang}-${currentMode}`;
+    
+    const ogTitle = document.querySelector('meta[property="og:title"]');
+    const ogDesc = document.querySelector('meta[property="og:description"]');
+    
+    if (ogTitle && ogTitle.hasAttribute(attr)) {
+        ogTitle.setAttribute('content', ogTitle.getAttribute(attr));
+    }
+    
+    if (ogDesc && ogDesc.hasAttribute(attr)) {
+        ogDesc.setAttribute('content', ogDesc.getAttribute(attr));
+    }
+    
+    // Twitter meta
+    const twitterTitle = document.querySelector('meta[name="twitter:title"]');
+    const twitterDesc = document.querySelector('meta[name="twitter:description"]');
+    
+    if (twitterTitle && ogTitle) {
+        twitterTitle.setAttribute('content', ogTitle.getAttribute('content'));
+    }
+    
+    if (twitterDesc && ogDesc) {
+        twitterDesc.setAttribute('content', ogDesc.getAttribute('content'));
+    }
+}
 
-// İngilizce butonuna tıklama eventi
-enBtn.addEventListener('click', () => {
-    setLanguage('en');
-});
+// Dil buton event listener'ları
+trBtn.addEventListener('click', () => setLanguage('tr'));
+enBtn.addEventListener('click', () => setLanguage('en'));
 
 /* ========================================
-   PARTICLE EFFECT SYSTEM
+   PARTİKÜL SİSTEMİ
    ======================================== */
-// Arkaplan partikül animasyonu sistemi
+
+// Arkaplan partikül animasyonu
 class ParticleSystem {
     constructor() {
         this.canvas = document.getElementById('particleCanvas');
         this.ctx = this.canvas.getContext('2d');
         this.particles = [];
         this.mouse = { x: 0, y: 0 };
-        this.time = 0; // Animasyon zamanı (oyuncu modu efektleri için)
+        this.time = 0;
         
         this.init();
         this.bindEvents();
@@ -210,7 +203,7 @@ class ParticleSystem {
         this.createParticles();
     }
     
-    // Canvas boyutunu ekran boyutuna göre ayarla
+    // Canvas boyutunu ekrana göre ayarla
     resize() {
         this.canvas.width = window.innerWidth;
         this.canvas.height = window.innerHeight;
@@ -220,115 +213,147 @@ class ParticleSystem {
     createParticles() {
         this.particles = [];
         const isGamerMode = document.body.classList.contains('gamer-mode-active');
-        const particleCount = this.getParticleCount();
+        const particleCount = isGamerMode ? 120 : 70; // Kişisel modda network efekti için daha fazla
         
         for (let i = 0; i < particleCount; i++) {
-            const isGamer = isGamerMode;
+            const rand = Math.random();
             this.particles.push({
                 x: Math.random() * this.canvas.width,
                 y: Math.random() * this.canvas.height,
-                vx: (Math.random() - 0.5) * (isGamer ? 1.2 : 0.5), // Oyuncu modunda daha hızlı
-                vy: (Math.random() - 0.5) * (isGamer ? 1.2 : 0.5),
-                size: Math.random() * (isGamer ? 3 : 2) + (isGamer ? 1.5 : 1),
-                opacity: Math.random() * (isGamer ? 0.8 : 0.5) + (isGamer ? 0.4 : 0.2),
-                originalOpacity: Math.random() * (isGamer ? 0.8 : 0.5) + (isGamer ? 0.4 : 0.2),
-                colorType: isGamer ? (Math.random() > 0.5 ? 'primary' : 'alt') : 'normal', // Renk tipi
-                pulseSpeed: isGamer ? Math.random() * 0.02 + 0.01 : 0 // Pulse hızı
+                vx: (Math.random() - 0.5) * (isGamerMode ? 1.5 : 0.3), // Kişisel modda daha yavaş
+                vy: (Math.random() - 0.5) * (isGamerMode ? 1.5 : 0.3),
+                size: Math.random() * (isGamerMode ? 4 : 1.5) + (isGamerMode ? 2 : 0.8), // Kişisel modda daha küçük
+                opacity: Math.random() * (isGamerMode ? 1.0 : 0.4) + (isGamerMode ? 0.5 : 0.3),
+                originalOpacity: Math.random() * (isGamerMode ? 1.0 : 0.4) + (isGamerMode ? 0.5 : 0.3),
+                // Renk tipleri: Oyuncu modu (indigo/purple/live), Kişisel mod (cyber/network/secure)
+                colorType: isGamerMode 
+                    ? (rand < 0.4 ? 'primary' : rand < 0.8 ? 'alt' : 'live')
+                    : (rand < 0.4 ? 'cyber' : rand < 0.7 ? 'network' : 'secure'),
+                pulseSpeed: isGamerMode ? Math.random() * 0.03 + 0.015 : Math.random() * 0.02 + 0.005, // Kişisel modda yavaş pulse
+                trail: [], // Partikül izi için
+                dataFlow: !isGamerMode ? Math.random() * Math.PI * 2 : 0 // Kişisel modda veri akışı açısı
             });
         }
     }
     
-    // Mevcut tema rengine göre partikül renklerini döndür
+    // Tema renklerini al
     getThemeColors() {
         const isDark = document.body.classList.contains('dark');
         const isGamerMode = document.body.classList.contains('gamer-mode-active');
         
-        // Oyuncu modunda özel renkler
         if (isGamerMode) {
             return {
-                particle: 'rgba(99, 102, 241, ', // Indigo
-                particleAlt: 'rgba(139, 92, 246, ', // Purple
+                particle: 'rgba(99, 102, 241, ',      // Indigo
+                particleAlt: 'rgba(139, 92, 246, ',    // Purple
+                particleLive: 'rgba(239, 68, 68, ',    // Kırmızı (LIVE teması)
                 connection: 'rgba(99, 102, 241, ',
-                connectionAlt: 'rgba(139, 92, 246, '
+                connectionAlt: 'rgba(139, 92, 246, ',
+                connectionLive: 'rgba(239, 68, 68, '
             };
         }
         
-        // Normal mod
+        // Kişisel Mod: Siber Güvenlik Teması
         return {
-            particle: isDark ? 'rgba(250, 250, 250, ' : 'rgba(10, 10, 10, ',
-            connection: isDark ? 'rgba(250, 250, 250, ' : 'rgba(10, 10, 10, '
+            particle: 'rgba(16, 185, 129, ',         // Cyber Green
+            particleAlt: 'rgba(6, 182, 212, ',        // Network Cyan
+            particleSecure: 'rgba(34, 197, 94, ',     // Secure Green
+            connection: 'rgba(16, 185, 129, ',        // Cyber Green
+            connectionAlt: 'rgba(6, 182, 212, ',      // Network Cyan
+            connectionSecure: 'rgba(34, 197, 94, '     // Secure Green
         };
     }
     
-    // Oyuncu modunda partikül sayısını artır
-    getParticleCount() {
-        const isGamerMode = document.body.classList.contains('gamer-mode-active');
-        return isGamerMode ? 80 : 50; // Oyuncu modunda daha fazla partikül
-    }
-    
-    // Partiküllerin pozisyonlarını ve hızlarını güncelle
+    // Partikül pozisyonlarını güncelle
     updateParticles() {
-        const colors = this.getThemeColors();
         const isGamerMode = document.body.classList.contains('gamer-mode-active');
-        this.time += 0.016; // ~60fps için zaman artışı
+        this.time += 0.016;
         
         this.particles.forEach((particle, index) => {
-            // Oyuncu modunda pulse efekti
-            if (isGamerMode && particle.pulseSpeed) {
-                const pulse = Math.sin(this.time * particle.pulseSpeed + index) * 0.3 + 1;
-                particle.currentOpacity = particle.originalOpacity * pulse;
+            // Pulse efekti
+            if (particle.pulseSpeed) {
+                if (isGamerMode) {
+                    // Oyuncu modu: çift pulse
+                    const pulse1 = Math.sin(this.time * particle.pulseSpeed + index) * 0.4 + 1;
+                    const pulse2 = Math.cos(this.time * particle.pulseSpeed * 1.5 + index * 0.5) * 0.2 + 1;
+                    particle.currentOpacity = particle.originalOpacity * pulse1 * pulse2;
+                } else {
+                    // Kişisel mod: network tarzı yavaş pulse
+                    const pulse = Math.sin(this.time * particle.pulseSpeed + index * 0.5) * 0.2 + 1;
+                    particle.currentOpacity = particle.originalOpacity * pulse;
+                }
             } else {
                 particle.currentOpacity = particle.originalOpacity;
             }
             
-            // Pozisyonu hıza göre güncelle
+            // Trail efekti (sadece oyuncu modu)
+            if (isGamerMode && particle.trail) {
+                particle.trail.push({ x: particle.x, y: particle.y, opacity: particle.currentOpacity });
+                if (particle.trail.length > 5) {
+                    particle.trail.shift();
+                }
+            }
+            
+            // Kişisel mod: Veri akışı efekti (network benzeri)
+            if (!isGamerMode && particle.dataFlow !== undefined) {
+                particle.dataFlow += 0.02;
+                // Yavaş dairesel hareket
+                const radius = 0.5;
+                particle.vx += Math.cos(particle.dataFlow) * 0.01;
+                particle.vy += Math.sin(particle.dataFlow) * 0.01;
+            }
+            
+            // Pozisyon güncelle
             particle.x += particle.vx;
             particle.y += particle.vy;
             
-            // Kenarlarda sektir (ters yönde hareket et)
+            // Kenarlarda sektir
             if (particle.x < 0 || particle.x > this.canvas.width) {
-                particle.vx *= -1;
+                particle.vx *= isGamerMode ? -0.95 : -0.98; // Kişisel modda daha yumuşak
             }
             if (particle.y < 0 || particle.y > this.canvas.height) {
-                particle.vy *= -1;
+                particle.vy *= isGamerMode ? -0.95 : -0.98;
             }
             
-            // Partikülleri sınırlar içinde tut
+            // Sınırlar içinde tut
             particle.x = Math.max(0, Math.min(this.canvas.width, particle.x));
             particle.y = Math.max(0, Math.min(this.canvas.height, particle.y));
             
-            // Fare etkileşimi (oyuncu modunda daha geniş menzil)
-            const mouseRange = isGamerMode ? 150 : 100;
+            // Fare etkileşimi
+            const mouseRange = isGamerMode ? 200 : 120;
             const dx = this.mouse.x - particle.x;
             const dy = this.mouse.y - particle.y;
             const distance = Math.sqrt(dx * dx + dy * dy);
             
-            if (distance < mouseRange) {
-                // Fare yakınlığına göre partikülü etkile
+            if (distance < mouseRange && isGamerMode) {
+                const force = Math.pow((mouseRange - distance) / mouseRange, 2);
+                const forceMultiplier = 0.03;
+                const angle = Math.atan2(dy, dx);
+                
+                particle.vx -= Math.cos(angle) * force * forceMultiplier;
+                particle.vy -= Math.sin(angle) * force * forceMultiplier;
+                particle.currentOpacity = Math.min(1, particle.originalOpacity + force * 0.8);
+            } else if (distance < mouseRange) {
+                // Kişisel mod: Daha hafif etkileşim
                 const force = (mouseRange - distance) / mouseRange;
-                const forceMultiplier = isGamerMode ? 0.02 : 0.01;
-                particle.vx -= (dx / distance) * force * forceMultiplier;
-                particle.vy -= (dy / distance) * force * forceMultiplier;
-                particle.currentOpacity = particle.originalOpacity + force * (isGamerMode ? 0.5 : 0.3);
-            } else {
-                particle.currentOpacity = particle.originalOpacity;
+                particle.vx -= (dx / distance) * force * 0.008;
+                particle.vy -= (dy / distance) * force * 0.008;
+                particle.currentOpacity = Math.min(1, particle.originalOpacity + force * 0.4);
             }
             
-            // Hızı sınırla (oyuncu modunda daha yüksek hız limiti)
-            const maxSpeed = isGamerMode ? 2 : 1;
+            // Hız sınırla
+            const maxSpeed = isGamerMode ? 3 : 0.8;
             particle.vx = Math.max(-maxSpeed, Math.min(maxSpeed, particle.vx));
             particle.vy = Math.max(-maxSpeed, Math.min(maxSpeed, particle.vy));
         });
     }
     
-    // Partikülleri ve bağlantıları çiz
+    // Partikülleri çiz
     drawParticles() {
         const colors = this.getThemeColors();
         const isGamerMode = document.body.classList.contains('gamer-mode-active');
+        const connectionRange = isGamerMode ? 180 : 120; // Daha geniş bağlantı ağı
         
-        // Birbirine yakın partiküller arasında çizgiler çiz (network efekti)
-        // Oyuncu modunda önce çizgileri çiz, böylece partiküller üstte kalır
-        const connectionRange = isGamerMode ? 150 : 120;
+        // Partiküller arası bağlantılar
         for (let i = 0; i < this.particles.length; i++) {
             for (let j = i + 1; j < this.particles.length; j++) {
                 const dx = this.particles[i].x - this.particles[j].x;
@@ -336,72 +361,185 @@ class ParticleSystem {
                 const distance = Math.sqrt(dx * dx + dy * dy);
                 
                 if (distance < connectionRange) {
-                    const opacityFactor = isGamerMode ? 0.2 : 0.1;
-                    const opacity = (connectionRange - distance) / connectionRange * opacityFactor;
+                    const opacityFactor = isGamerMode ? 0.25 : 0.1;
+                    const opacity = Math.pow((connectionRange - distance) / connectionRange, 2) * opacityFactor;
                     
-                    // Oyuncu modunda gradient çizgiler
                     if (isGamerMode) {
+                        // Renk tipine göre gradient oluştur
+                        let color1, color2;
+                        if (this.particles[i].colorType === 'live' || this.particles[j].colorType === 'live') {
+                            color1 = colors.connectionLive;
+                            color2 = this.particles[i].colorType === 'alt' || this.particles[j].colorType === 'alt' 
+                                ? colors.connectionAlt : colors.connection;
+                        } else if (this.particles[i].colorType === 'alt' || this.particles[j].colorType === 'alt') {
+                            color1 = colors.connection;
+                            color2 = colors.connectionAlt;
+                        } else {
+                            color1 = colors.connection;
+                            color2 = colors.connectionAlt;
+                        }
+                        
                         const gradient = this.ctx.createLinearGradient(
                             this.particles[i].x, this.particles[i].y,
                             this.particles[j].x, this.particles[j].y
                         );
-                        const color1 = colors.connection + opacity + ')';
-                        const color2 = colors.connectionAlt ? colors.connectionAlt + opacity + ')' : color1;
-                        gradient.addColorStop(0, color1);
-                        gradient.addColorStop(1, color2);
+                        gradient.addColorStop(0, color1 + opacity + ')');
+                        gradient.addColorStop(0.5, (color1 || colors.connection) + opacity * 1.5 + ')');
+                        gradient.addColorStop(1, color2 + opacity + ')');
                         this.ctx.strokeStyle = gradient;
+                        this.ctx.lineWidth = 1.5; // Daha kalın çizgiler
+                        this.ctx.shadowBlur = 5;
+                        this.ctx.shadowColor = color1 + '0.5)';
                     } else {
-                        this.ctx.strokeStyle = colors.connection + opacity + ')';
+                        // Kişisel mod: Siber güvenlik teması - network bağlantıları
+                        let color1, color2;
+                        if (this.particles[i].colorType === 'secure' || this.particles[j].colorType === 'secure') {
+                            color1 = colors.connectionSecure;
+                            color2 = this.particles[i].colorType === 'network' || this.particles[j].colorType === 'network' 
+                                ? colors.connectionAlt : colors.connection;
+                        } else if (this.particles[i].colorType === 'network' || this.particles[j].colorType === 'network') {
+                            color1 = colors.connection;
+                            color2 = colors.connectionAlt;
+                        } else {
+                            color1 = colors.connection;
+                            color2 = colors.connection;
+                        }
+                        
+                        const gradient = this.ctx.createLinearGradient(
+                            this.particles[i].x, this.particles[i].y,
+                            this.particles[j].x, this.particles[j].y
+                        );
+                        gradient.addColorStop(0, color1 + opacity + ')');
+                        gradient.addColorStop(0.5, color1 + opacity * 1.2 + ')');
+                        gradient.addColorStop(1, color2 + opacity + ')');
+                        this.ctx.strokeStyle = gradient;
+                        this.ctx.lineWidth = 0.8; // İnce network çizgileri
+                        this.ctx.shadowBlur = 3;
+                        this.ctx.shadowColor = color1 + '0.4)';
                     }
                     
                     this.ctx.beginPath();
                     this.ctx.moveTo(this.particles[i].x, this.particles[i].y);
                     this.ctx.lineTo(this.particles[j].x, this.particles[j].y);
-                    this.ctx.lineWidth = isGamerMode ? 1 : 0.5;
                     this.ctx.stroke();
+                    this.ctx.shadowBlur = 0; // Shadow'u sıfırla
                 }
             }
         }
         
-        // Partikülleri çiz (oyuncu modunda glow efekti ile)
+        // Partikülleri çiz
         this.particles.forEach(particle => {
-            const opacity = particle.currentOpacity || particle.opacity || particle.originalOpacity;
+            const opacity = particle.currentOpacity || particle.originalOpacity;
             
+            // Trail efekti (oyuncu modu)
+            if (isGamerMode && particle.trail && particle.trail.length > 1) {
+                for (let i = 0; i < particle.trail.length - 1; i++) {
+                    const trailPoint = particle.trail[i];
+                    const nextPoint = particle.trail[i + 1];
+                    const trailOpacity = (i / particle.trail.length) * opacity * 0.3;
+                    
+                    const trailColor = particle.colorType === 'live' 
+                        ? colors.particleLive 
+                        : particle.colorType === 'alt' 
+                        ? colors.particleAlt 
+                        : colors.particle;
+                    
+                    this.ctx.beginPath();
+                    this.ctx.strokeStyle = trailColor + trailOpacity + ')';
+                    this.ctx.lineWidth = 1;
+                    this.ctx.moveTo(trailPoint.x, trailPoint.y);
+                    this.ctx.lineTo(nextPoint.x, nextPoint.y);
+                    this.ctx.stroke();
+                }
+            }
+            
+            // Glow efektleri
             if (isGamerMode) {
-                // Glow efekti için dış halka
-                const glowGradient = this.ctx.createRadialGradient(
+                // Oyuncu modu glow
+                const particleColor = particle.colorType === 'live' 
+                    ? colors.particleLive 
+                    : particle.colorType === 'alt' 
+                    ? colors.particleAlt 
+                    : colors.particle;
+                
+                const outerGlow = this.ctx.createRadialGradient(
+                    particle.x, particle.y, 0,
+                    particle.x, particle.y, particle.size * 5
+                );
+                outerGlow.addColorStop(0, particleColor + opacity * 0.3 + ')');
+                outerGlow.addColorStop(0.3, particleColor + opacity * 0.15 + ')');
+                outerGlow.addColorStop(0.6, particleColor + opacity * 0.05 + ')');
+                outerGlow.addColorStop(1, particleColor + '0)');
+                
+                this.ctx.beginPath();
+                this.ctx.arc(particle.x, particle.y, particle.size * 5, 0, Math.PI * 2);
+                this.ctx.fillStyle = outerGlow;
+                this.ctx.fill();
+                
+                const innerGlow = this.ctx.createRadialGradient(
+                    particle.x, particle.y, 0,
+                    particle.x, particle.y, particle.size * 2.5
+                );
+                innerGlow.addColorStop(0, particleColor + opacity + ')');
+                innerGlow.addColorStop(0.5, particleColor + opacity * 0.6 + ')');
+                innerGlow.addColorStop(1, particleColor + '0)');
+                
+                this.ctx.beginPath();
+                this.ctx.arc(particle.x, particle.y, particle.size * 2.5, 0, Math.PI * 2);
+                this.ctx.fillStyle = innerGlow;
+                this.ctx.fill();
+            } else {
+                // Kişisel mod: Minimal cyber glow
+                const particleColor = particle.colorType === 'secure' 
+                    ? colors.particleSecure 
+                    : particle.colorType === 'network' 
+                    ? colors.particleAlt 
+                    : colors.particle;
+                
+                const cyberGlow = this.ctx.createRadialGradient(
                     particle.x, particle.y, 0,
                     particle.x, particle.y, particle.size * 3
                 );
-                const color = particle.colorType === 'alt' && colors.particleAlt 
-                    ? colors.particleAlt 
-                    : colors.particle;
-                glowGradient.addColorStop(0, color + opacity + ')');
-                glowGradient.addColorStop(0.5, color + opacity * 0.5 + ')');
-                glowGradient.addColorStop(1, color + '0)');
+                cyberGlow.addColorStop(0, particleColor + opacity * 0.4 + ')');
+                cyberGlow.addColorStop(0.5, particleColor + opacity * 0.15 + ')');
+                cyberGlow.addColorStop(1, particleColor + '0)');
                 
                 this.ctx.beginPath();
                 this.ctx.arc(particle.x, particle.y, particle.size * 3, 0, Math.PI * 2);
-                this.ctx.fillStyle = glowGradient;
+                this.ctx.fillStyle = cyberGlow;
                 this.ctx.fill();
             }
             
             // Ana partikül
-            this.ctx.beginPath();
-            this.ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
             const particleColor = isGamerMode 
-                ? (particle.colorType === 'alt' && colors.particleAlt 
+                ? (particle.colorType === 'live' 
+                    ? colors.particleLive 
+                    : particle.colorType === 'alt' && colors.particleAlt 
                     ? colors.particleAlt 
                     : colors.particle)
-                : colors.particle;
+                : (particle.colorType === 'secure' 
+                    ? colors.particleSecure 
+                    : particle.colorType === 'network' 
+                    ? colors.particleAlt 
+                    : colors.particle);
+            
+            this.ctx.beginPath();
+            this.ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
             this.ctx.fillStyle = particleColor + opacity + ')';
             this.ctx.fill();
             
-            // Oyuncu modunda iç parlaklık
+            // İç parlaklık
             if (isGamerMode) {
+                // Oyuncu modu: Parlak iç
+                this.ctx.beginPath();
+                this.ctx.arc(particle.x, particle.y, particle.size * 0.6, 0, Math.PI * 2);
+                this.ctx.fillStyle = 'rgba(255, 255, 255, ' + (opacity * 0.8) + ')';
+                this.ctx.fill();
+            } else {
+                // Kişisel mod: Hafif cyber parlaklık
                 this.ctx.beginPath();
                 this.ctx.arc(particle.x, particle.y, particle.size * 0.5, 0, Math.PI * 2);
-                this.ctx.fillStyle = 'rgba(255, 255, 255, ' + (opacity * 0.6) + ')';
+                this.ctx.fillStyle = particleColor + (opacity * 1.2) + ')';
                 this.ctx.fill();
             }
         });
@@ -412,24 +550,21 @@ class ParticleSystem {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.updateParticles();
         this.drawParticles();
-        requestAnimationFrame(() => this.animate()); // Sonraki frame'i bekle
+        requestAnimationFrame(() => this.animate());
     }
     
     // Event listener'ları bağla
     bindEvents() {
-        // Ekran boyutu değiştiğinde canvas'ı yeniden boyutlandır
         window.addEventListener('resize', () => {
             this.resize();
             this.createParticles();
         });
         
-        // Fare hareketini takip et
         window.addEventListener('mousemove', (e) => {
             this.mouse.x = e.clientX;
             this.mouse.y = e.clientY;
         });
         
-        // Fare sayfadan çıktığında pozisyonu resetle
         window.addEventListener('mouseleave', () => {
             this.mouse.x = -1000;
             this.mouse.y = -1000;
@@ -438,54 +573,45 @@ class ParticleSystem {
 }
 
 /* ========================================
-   MODE TOGGLE SYSTEM
+   MOD DEĞİŞTİRME SİSTEMİ
    ======================================== */
-// Mod değiştirme sistemi (Kişisel/Oyuncu)
+
 const modeToggleBtn = document.getElementById('modeToggleBtn');
 const personalMode = document.getElementById('personalMode');
 const gamerMode = document.getElementById('gamerMode');
-
-// Varsayılan mod: her zaman kişisel mod (localStorage yok sayılıyor)
 const defaultMode = 'personal';
 
-// Sayfa yüklendiğinde modu ayarla
+// Mod değiştirme fonksiyonu
 function setMode(mode) {
-    if (!personalMode || !gamerMode || !modeToggleBtn) {
-        console.error('Mode elements not found');
-        return;
-    }
+    if (!personalMode || !gamerMode || !modeToggleBtn) return;
     
     if (mode === 'gamer') {
         body.classList.add('gamer-mode-active');
         personalMode.classList.remove('active');
         gamerMode.classList.add('active');
-        modeToggleBtn.textContent = '👤'; // Kişisel moda geç butonu
+        modeToggleBtn.textContent = '👤';
     } else {
         body.classList.remove('gamer-mode-active');
         personalMode.classList.add('active');
         gamerMode.classList.remove('active');
-        modeToggleBtn.textContent = '🎮'; // Oyuncu moduna geç butonu
+        modeToggleBtn.textContent = '🎮';
     }
-    // Mod tercihini localStorage'a kaydetme (her zaman kişisel modda başlasın)
-    // localStorage.setItem('siteMode', mode); // Devre dışı
     
-    // İkonları yeniden yükle (Lucide)
+    // İkonları yenile
     lucide.createIcons();
     
-    // Dil ayarlarını güncelle (her iki mod için de)
+    // Dil ayarlarını güncelle
     const currentLang = document.body.classList.contains('lang-en') ? 'en' : 'tr';
     setLanguage(currentLang);
     
-    // Title'ı moda göre güncelle
+    // Başlık ve partikülleri güncelle
     updateTitleForMode();
-    
-    // Partikülleri moda göre yeniden oluştur
     if (particleSystem) {
         particleSystem.createParticles();
     }
 }
 
-// Title'ı mevcut mod ve dile göre güncelle
+// Başlığı mod ve dile göre güncelle
 function updateTitleForMode() {
     const currentLang = document.body.classList.contains('lang-en') ? 'en' : 'tr';
     const currentMode = document.body.classList.contains('gamer-mode-active') ? 'gamer' : 'personal';
@@ -500,99 +626,47 @@ function updateTitleForMode() {
         }
     }
     
-    // Meta etiketlerini de güncelle
-    updateMetaTagsForMode();
+    // Meta etiketlerini güncelle
+    updateMetaTags(currentLang);
 }
 
-// Meta etiketlerini mevcut mod ve dile göre güncelle
-function updateMetaTagsForMode() {
-    const currentLang = document.body.classList.contains('lang-en') ? 'en' : 'tr';
-    const currentMode = document.body.classList.contains('gamer-mode-active') ? 'gamer' : 'personal';
-    
-    // OG Title
-    const ogTitle = document.querySelector('meta[property="og:title"]');
-    if (ogTitle) {
-        const titleAttr = `data-${currentLang}-${currentMode}`;
-        const newTitle = ogTitle.getAttribute(titleAttr);
-        if (newTitle) {
-            ogTitle.setAttribute('content', newTitle);
-        }
-    }
-    
-    // OG Description
-    const ogDesc = document.querySelector('meta[property="og:description"]');
-    if (ogDesc) {
-        const descAttr = `data-${currentLang}-${currentMode}`;
-        const newDesc = ogDesc.getAttribute(descAttr);
-        if (newDesc) {
-            ogDesc.setAttribute('content', newDesc);
-        }
-    }
-    
-    // Twitter Title
-    const twitterTitle = document.querySelector('meta[name="twitter:title"]');
-    if (twitterTitle && ogTitle) {
-        twitterTitle.setAttribute('content', ogTitle.getAttribute('content'));
-    }
-    
-    // Twitter Description
-    const twitterDesc = document.querySelector('meta[name="twitter:description"]');
-    if (twitterDesc && ogDesc) {
-        twitterDesc.setAttribute('content', ogDesc.getAttribute('content'));
-    }
-}
-
-// DOM yüklendiğinde mod sistemini başlat
+// Mod sistemini başlat
 function initModeSystem() {
-    if (!modeToggleBtn || !personalMode || !gamerMode) {
-        console.error('Mode toggle elements not found');
-        return;
-    }
+    if (!modeToggleBtn || !personalMode || !gamerMode) return;
     
-    // İlk yüklemede her zaman kişisel modda başla
     setMode(defaultMode);
     
-    // Mod toggle butonuna tıklama eventi
     modeToggleBtn.addEventListener('click', () => {
         const currentMode = body.classList.contains('gamer-mode-active') ? 'gamer' : 'personal';
-        const newMode = currentMode === 'gamer' ? 'personal' : 'gamer';
-        setMode(newMode);
+        setMode(currentMode === 'gamer' ? 'personal' : 'gamer');
     });
 }
 
 /* ========================================
-   INITIALIZATION
+   BAŞLATMA
    ======================================== */
-// Particle system instance'ını global tut (mod değişikliklerinde erişmek için)
+
 let particleSystem = null;
 
-// DOM hazır olduğunda mod sistemini başlat
+// DOM yüklendiğinde mod sistemini başlat
 document.addEventListener('DOMContentLoaded', () => {
-    // Mod sistemini başlat
     initModeSystem();
 });
 
 // Sayfa tamamen yüklendiğinde partikül sistemini başlat
 window.addEventListener('load', () => {
     particleSystem = new ParticleSystem();
-    
-    // Title'ı başlangıç moduna göre güncelle
     if (typeof updateTitleForMode === 'function') {
         updateTitleForMode();
         originalTitle = document.title;
     }
 });
 
-/* ========================================
-   TAB VISIBILITY HANDLER
-   ======================================== */
-// Sekme değişikliğini dinle ve başlığı güncelle
-document.addEventListener('visibilitychange', function() {
+// Sekme görünürlük değişikliği
+document.addEventListener('visibilitychange', () => {
     if (document.hidden) {
-        // Sekme arkaplanda - "Geri Gel!" başlığını göster
         document.title = getCurrentHiddenTitle();
     } else {
-        // Sekme görünür - orijinal başlığı geri yükle
         document.title = originalTitle;
     }
 });

@@ -2,48 +2,60 @@
 <html lang="tr">
 
 <head>
+    <!-- Temel Meta Etiketleri -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <!-- Security Headers -->
+    <!-- Güvenlik Başlıkları -->
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-ancestors 'none';">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta http-equiv="X-Frame-Options" content="DENY">
     <meta http-equiv="X-XSS-Protection" content="1; mode=block">
     <meta name="referrer" content="strict-origin-when-cross-origin">
+    
+    <!-- Open Graph Meta Etiketleri (Sosyal Medya Paylaşımı İçin) -->
     <meta property="og:title" content="Onat Dibo | Hakkımda" data-tr-personal="Onat Dibo | Hakkımda" data-en-personal="Onat Dibo | About Me" data-tr-gamer="ZealMight | İçerik Üreticisi" data-en-gamer="ZealMight | Content Creator">
     <meta property="og:description" content="Sosyal medya hesapları ve iletişim bilgilerime buradan ulaşabilirsiniz." data-tr-personal="Sosyal medya hesapları ve iletişim bilgilerime buradan ulaşabilirsiniz." data-en-personal="You can access my social media accounts and contact information here." data-tr-gamer="Valorant oyuncusu, canlı yayıncı ve içerik üreticisi. Kick, YouTube ve Discord hesaplarımı takip edebilirsiniz." data-en-gamer="Valorant player, streamer and content creator. Follow me on Kick, YouTube and Discord.">
     <meta property="og:type" content="profile">
-    <link rel="icon" href="img/favicon.png">
     <meta property="og:image" content="https://onatdibo.com/img/profile.jpg">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:image:type" content="image/jpeg">
     <meta property="og:url" content="https://onatdibo.com">
-    <!-- Twitter Card -->
+    
+    <!-- Twitter Card Meta Etiketleri -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Onat Dibo | Hakkımda">
     <meta name="twitter:description" content="Sosyal medya hesapları ve iletişim bilgilerime buradan ulaşabilirsiniz.">
     <meta name="twitter:image" content="https://onatdibo.com/img/profile.jpg">
+    
+    <!-- Favicon ve CSS -->
+    <link rel="icon" href="img/favicon.png">
     <link rel="stylesheet" href="assets/css/style.css">
+    
+    <!-- Sayfa Başlığı (Dinamik - Mod ve Dile Göre Değişir) -->
     <title data-tr-personal="Onat Dibo | Hakkımda" data-en-personal="Onat Dibo | About Me" data-tr-gamer="ZealMight | İçerik Üreticisi" data-en-gamer="ZealMight | Content Creator">Onat Dibo | Hakkımda</title>
 </head>
 
 <body>
+    <!-- Arkaplan Partikül Animasyonu Canvas -->
     <canvas id="particleCanvas"></canvas>
     
+    <!-- Kontrol Butonları (Sağ Üst) -->
     <div class="control-buttons">
         <button class="mode-toggle-btn" id="modeToggleBtn" aria-label="Mod Değiştir" title="Kişisel/Oyuncu Modu">🎮</button>
         <button class="theme-btn" id="themeBtn" aria-label="Tema">🌙</button>
     </div>
     
+    <!-- Dil Değiştirme Butonları (Sol Üst) -->
     <div class="language-switcher">
         <button class="lang-btn active" id="trBtn" data-lang="tr">TR</button>
         <button class="lang-btn" id="enBtn" data-lang="en">EN</button>
     </div>
 
+    <!-- Ana İçerik Wrapper -->
     <div class="wrapper">
-        <!-- Kişisel Mod İçeriği -->
+        <!-- Kişisel Mod: Profesyonel Profil -->
         <div class="content-mode personal-mode active" id="personalMode">
             <div class="header">
                 <img src="img/profile.jpg" alt="Onat Dibo" class="avatar">
@@ -52,6 +64,7 @@
                 <div class="description" data-tr="Bilgisayar Teknolojileri mezunu, Cisco onaylı Siber Güvenlik sertifikasına sahip. Sürekli öğrenme motivasyonu yüksek, sektördeki gelişmeleri yakından takip eden ve yenilikçi çözümler üretmeye odaklanan bir teknoloji profesyoneli." data-en="Computer Technologies graduate with Cisco certified Cyber Security certification. A technology professional with high continuous learning motivation, closely following industry developments and focused on producing innovative solutions.">Bilgisayar Teknolojileri mezunu, Cisco onaylı Siber Güvenlik sertifikasına sahip. Sürekli öğrenme motivasyonu yüksek, sektördeki gelişmeleri yakından takip eden ve yenilikçi çözümler üretmeye odaklanan bir teknoloji profesyoneli.</div>
             </div>
 
+            <!-- Sosyal Medya Linkleri -->
             <div class="links">
                 <a href="https://instagram.com/onat_dibo" target="_blank" rel="noopener noreferrer" class="link">
                     <div class="link-left">
@@ -95,19 +108,20 @@
             </div>
         </div>
 
-        <!-- Oyuncu Mod İçeriği -->
+        <!-- Oyuncu Mod: İçerik Üreticisi Profili -->
         <div class="content-mode gamer-mode" id="gamerMode">
             <div class="header">
                 <div class="avatar-wrapper">
-                    <img src="img/game_logo.png" alt="Onat Dibo" class="avatar">
+                    <img src="img/game_logo.png" alt="ZealMight" class="avatar">
                     <span class="live-badge">LIVE</span>
                     <span class="live-dot"></span>
                 </div>
                 <div class="name">ZealMight</div>
-                <div class="bio" data-tr="Oyun Sever | FPS Oyunları" data-en="Gamer | FPS Games">Dijital İçerik Üreticisi</div>
+                <div class="bio" data-tr="Dijital İçerik Üreticisi" data-en="Digital Content Creator">Dijital İçerik Üreticisi</div>
                 <div class="description" data-tr="Adım Onat, genellikle Valorant oynuyorum, bunun haricinde ise Hikaye ve Korku temalı oyunlar da oynuyorum. İlerleyen zamanlarda da IRL yayını yapmaya çalışıcam umarım kalıcı olursun." data-en="My name is Onat, I usually play Valorant, aside from that, I also play Story and Horror themed games. I'll try to do IRL streams in the future, I hope you stick around.">Adım Onat, genellikle Valorant oynuyorum, bunun haricinde ise Hikaye ve Korku temalı oyunlar da oynuyorum. İlerleyen zamanlarda da IRL yayını yapmaya çalışıcam umarım kalıcı olursun.</div>
             </div>
 
+            <!-- Sosyal Medya Linkleri -->
             <div class="links">
                 <a href="https://discord.com/users/yourdiscordid" target="_blank" rel="noopener noreferrer" class="link">
                     <div class="link-left">
@@ -143,12 +157,14 @@
             </div>
         </div>
 
+        <!-- Footer: Telif Hakkı (Moda Göre Değişir) -->
         <div class="footer">
             <span class="footer-personal" data-tr="© 2025 Onat Dibo. 🥷 Tüm hakları saklıdır." data-en="© 2025 Onat Dibo. 🥷 All rights reserved.">© 2025 Onat Dibo. 🥷 Tüm hakları saklıdır.</span>
             <span class="footer-gamer" data-tr="© 2025 ZealMight. 🎮 Oyun zamanı!" data-en="© 2025 ZealMight. 🎮 Game time!">© 2025 ZealMight. 🎮 Oyun zamanı!</span>
         </div>
     </div>
 
+    <!-- JavaScript Kütüphaneleri ve Scriptler -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="assets/js/main.js"></script>
 </body>
