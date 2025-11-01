@@ -84,6 +84,7 @@ body {
 .header {
     text-align: center;
     margin-bottom: 20px;
+    overflow: visible; /* LIVE badge'in görünmesi için */
 }
 
 /* Profil fotoğrafı */
@@ -223,13 +224,23 @@ body {
 }
 
 /* ========================================
-   THEME BUTTON
+   CONTROL BUTTONS CONTAINER
    ======================================== */
-/* Tema değiştirme butonu (sağ üst) */
-.theme-btn {
+/* Butonların container'ı (sağ üst) */
+.control-buttons {
     position: fixed;
     top: 16px;
     right: 16px;
+    display: flex;
+    gap: 8px;
+    z-index: 10;
+}
+
+/* ========================================
+   THEME BUTTON
+   ======================================== */
+/* Tema değiştirme butonu (sağda) */
+.theme-btn {
     width: 36px;
     height: 36px;
     border: 1px solid var(--border);
@@ -241,7 +252,37 @@ body {
     align-items: center;
     justify-content: center;
     transition: all 0.2s;
-    z-index: 10; /* Diğer elementlerin üstünde */
+}
+
+/* ========================================
+   MODE TOGGLE BUTTON
+   ======================================== */
+/* Mod değiştirme butonu (tema butonunun solunda) */
+.mode-toggle-btn {
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--bg);
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.mode-toggle-btn:hover {
+    background: var(--hover);
+    border-color: var(--accent);
+    transform: scale(1.05);
+}
+
+/* Oyuncu modu aktifken buton stili */
+body.gamer-mode-active .mode-toggle-btn {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    border-color: #6366f1;
+    box-shadow: 0 0 10px rgba(99, 102, 241, 0.3);
 }
 
 /* Hover efekti */
@@ -295,6 +336,56 @@ body {
 }
 
 /* ========================================
+   CONTENT MODE TOGGLE
+   ======================================== */
+/* İçerik modları - birini göster, diğerini gizle */
+.content-mode {
+    display: none;
+    animation: fadeOut 0.3s ease-out;
+}
+
+.content-mode.active {
+    display: block;
+    animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+}
+
+/* Footer içerikleri */
+.footer-personal,
+.footer-gamer {
+    display: none;
+}
+
+body:not(.gamer-mode-active) .footer-personal {
+    display: inline;
+}
+
+body.gamer-mode-active .footer-gamer {
+    display: inline;
+}
+
+/* ========================================
    FOOTER
    ======================================== */
 /* Alt telif hakkı bölümü */
@@ -316,6 +407,255 @@ body.dark {
     --border: #1f1f1f;       /* Koyu kenarlık */
     --hover: #151515;        /* Hover rengi */
     --accent: #fafafa;       /* Açık vurgu rengi */
+}
+
+/* ========================================
+   GAMER MODE THEME
+   ======================================== */
+/* Oyuncu modu aktifken özel renkler */
+body.gamer-mode-active {
+    --gamer-accent: #6366f1;      /* Indigo */
+    --gamer-accent-light: #8b5cf6; /* Purple */
+    --gamer-accent-dark: #4f46e5;  /* Dark Indigo */
+}
+
+/* Oyuncu modunda link butonları - Genel stil */
+body.gamer-mode-active .link {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
+    border: 1.5px solid rgba(99, 102, 241, 0.2);
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(10px);
+}
+
+/* Oyuncu modunda link butonları - Hover efekti */
+body.gamer-mode-active .link:hover {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%);
+    border-color: rgba(99, 102, 241, 0.5);
+    box-shadow: 0 4px 16px rgba(99, 102, 241, 0.25), 
+                0 0 0 1px rgba(139, 92, 246, 0.1);
+    transform: translateY(-2px);
+}
+
+/* Oyuncu modunda link butonları - Active durumu */
+body.gamer-mode-active .link:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.2);
+}
+
+/* Her platform için özel renkler */
+body.gamer-mode-active .link[href*="discord"]:hover {
+    background: linear-gradient(135deg, rgba(88, 101, 242, 0.2) 0%, rgba(114, 137, 218, 0.2) 100%);
+    border-color: rgba(88, 101, 242, 0.6);
+    box-shadow: 0 4px 16px rgba(88, 101, 242, 0.3), 
+                0 0 0 1px rgba(114, 137, 218, 0.2);
+}
+
+body.gamer-mode-active .link[href*="kick"]:hover {
+    background: linear-gradient(135deg, rgba(37, 217, 94, 0.2) 0%, rgba(0, 255, 135, 0.2) 100%);
+    border-color: rgba(37, 217, 94, 0.6);
+    box-shadow: 0 4px 16px rgba(37, 217, 94, 0.3), 
+                0 0 0 1px rgba(0, 255, 135, 0.2);
+}
+
+body.gamer-mode-active .link[href*="youtube"]:hover {
+    background: linear-gradient(135deg, rgba(255, 0, 0, 0.2) 0%, rgba(204, 0, 0, 0.2) 100%);
+    border-color: rgba(255, 0, 0, 0.6);
+    box-shadow: 0 4px 16px rgba(255, 0, 0, 0.3), 
+                0 0 0 1px rgba(204, 0, 0, 0.2);
+}
+
+body.gamer-mode-active .link[href*="instagram"]:hover {
+    background: linear-gradient(135deg, rgba(225, 48, 108, 0.2) 0%, rgba(252, 175, 69, 0.2) 100%);
+    border-color: rgba(225, 48, 108, 0.6);
+    box-shadow: 0 4px 16px rgba(225, 48, 108, 0.3), 
+                0 0 0 1px rgba(252, 175, 69, 0.2);
+}
+
+/* Oyuncu modunda ok ikonu - Hover efekti */
+body.gamer-mode-active .link:hover .link-arrow {
+    transform: translateX(5px);
+    color: var(--gamer-accent);
+}
+
+/* Oyuncu modunda ikonlar - Hover efekti */
+body.gamer-mode-active .link:hover .link-icon {
+    transform: scale(1.1);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Oyuncu modunda avatar wrapper */
+body.gamer-mode-active .avatar-wrapper {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 12px;
+    padding: 12px; /* LIVE badge için yeterli alan */
+    margin: -12px -12px 12px -12px; /* Padding'i dengele */
+}
+
+/* Oyuncu modunda avatar için özel efekt - Sadece border efektli */
+body.gamer-mode-active .avatar {
+    position: relative;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+/* Border için animasyonlu gradient ring - yayıncı mod teması */
+body.gamer-mode-active .avatar::before {
+    content: '';
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    right: -4px;
+    bottom: -4px;
+    border-radius: 50%;
+    background: conic-gradient(from 0deg, 
+        rgba(239, 68, 68, 0.9),  /* Kırmızı - LIVE */
+        rgba(99, 102, 241, 0.8),  /* Indigo */
+        rgba(139, 92, 246, 0.8),  /* Purple */
+        rgba(239, 68, 68, 0.9));  /* Kırmızı - LIVE */
+    animation: borderRotate 3s linear infinite;
+    z-index: 0;
+    pointer-events: none;
+    filter: drop-shadow(0 0 8px rgba(239, 68, 68, 0.4));
+}
+
+/* Border ring içi boşluk için mask */
+body.gamer-mode-active .avatar::after {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    border-radius: 50%;
+    background: var(--bg);
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* Avatar resminin üstte olması için */
+body.gamer-mode-active .avatar {
+    z-index: 2;
+    position: relative;
+}
+
+/* Dark mode - border renkleri */
+body.dark.gamer-mode-active .avatar::before {
+    background: conic-gradient(from 0deg, 
+        rgba(239, 68, 68, 1),  /* Kırmızı - LIVE */
+        rgba(99, 102, 241, 0.9), 
+        rgba(139, 92, 246, 0.9), 
+        rgba(239, 68, 68, 1));  /* Kırmızı - LIVE */
+    filter: drop-shadow(0 0 10px rgba(239, 68, 68, 0.5));
+}
+
+/* Light mode - border renkleri */
+body:not(.dark).gamer-mode-active .avatar::before {
+    background: conic-gradient(from 0deg, 
+        rgba(220, 38, 38, 0.8),  /* Koyu kırmızı - LIVE */
+        rgba(99, 102, 241, 0.6), 
+        rgba(139, 92, 246, 0.6),
+        rgba(220, 38, 38, 0.8));  /* Koyu kırmızı - LIVE */
+    filter: drop-shadow(0 0 8px rgba(220, 38, 38, 0.4));
+}
+
+/* LIVE Badge */
+body.gamer-mode-active .live-badge {
+    position: absolute;
+    top: 4px; /* Wrapper padding içinde */
+    right: 4px; /* Wrapper padding içinde */
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+    font-size: 9px;
+    font-weight: 700;
+    padding: 3px 6px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    z-index: 10;
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.5),
+                0 0 12px rgba(239, 68, 68, 0.3);
+    animation: livePulse 2s ease-in-out infinite;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    white-space: nowrap;
+}
+
+/* LIVE Badge animasyonu */
+@keyframes livePulse {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 2px 8px rgba(239, 68, 68, 0.5),
+                    0 0 12px rgba(239, 68, 68, 0.3);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 2px 12px rgba(239, 68, 68, 0.7),
+                    0 0 16px rgba(239, 68, 68, 0.5);
+    }
+}
+
+/* LIVE Dot (canlı yayın göstergesi) */
+body.gamer-mode-active .live-dot {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    width: 12px;
+    height: 12px;
+    background: #ef4444;
+    border-radius: 50%;
+    border: 2px solid var(--bg);
+    z-index: 10;
+    animation: liveDotPulse 1.5s ease-in-out infinite;
+    box-shadow: 0 0 8px rgba(239, 68, 68, 0.8);
+}
+
+/* LIVE Dot animasyonu */
+@keyframes liveDotPulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+        box-shadow: 0 0 8px rgba(239, 68, 68, 0.8);
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 0.8;
+        box-shadow: 0 0 16px rgba(239, 68, 68, 1);
+    }
+}
+
+/* Border animasyonu (dönen gradient) */
+@keyframes borderRotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Hover efekti */
+body.gamer-mode-active .avatar:hover {
+    transform: scale(1.05);
+}
+
+body.gamer-mode-active .avatar:hover::before {
+    animation-duration: 1.5s; /* Hover'da daha hızlı */
+    filter: drop-shadow(0 0 12px rgba(239, 68, 68, 0.6));
+}
+
+/* Avatar wrapper hover */
+body.gamer-mode-active .avatar-wrapper:hover .live-badge {
+    animation-duration: 1s; /* Hover'da daha hızlı pulse */
+}
+
+
+/* Oyuncu modunda partiküller için gradient efekti */
+body.gamer-mode-active #particleCanvas {
+    opacity: 0.8;
+    filter: hue-rotate(220deg);
 }
 
 /* ========================================
@@ -341,6 +681,28 @@ body.dark {
         width: 56px;
         height: 56px;
         margin-bottom: 10px;
+    }
+
+    /* Avatar wrapper mobil */
+    body.gamer-mode-active .avatar-wrapper {
+        padding: 10px;
+        margin: -10px -10px 10px -10px;
+    }
+
+    /* Oyuncu modu LIVE badge küçük ekranda */
+    body.gamer-mode-active .live-badge {
+        font-size: 8px;
+        padding: 2px 5px;
+        top: 3px;
+        right: 3px;
+    }
+
+    /* Oyuncu modu LIVE dot küçük ekranda */
+    body.gamer-mode-active .live-dot {
+        width: 10px;
+        height: 10px;
+        bottom: 1px;
+        right: 1px;
     }
 
     /* Font boyutları küçültülür */
@@ -385,9 +747,19 @@ body.dark {
     }
 
     /* Butonlar küçük ekranda */
-    .theme-btn {
+    .control-buttons {
         top: 12px;
         right: 12px;
+        gap: 6px;
+    }
+
+    .theme-btn {
+        width: 32px;
+        height: 32px;
+        font-size: 14px;
+    }
+
+    .mode-toggle-btn {
         width: 32px;
         height: 32px;
         font-size: 14px;

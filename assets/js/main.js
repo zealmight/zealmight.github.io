@@ -10,14 +10,21 @@ lucide.createIcons();
 // Sekme değiştiğinde title'ı değiştirmek için kullanılan değişkenler
 let originalTitle = document.title; // Orijinal başlık (dil değişikliklerinde güncellenir)
 const hiddenTitles = {
-    tr: 'Geri Gel! 🧐',  // Türkçe: Sekme arkaplanda iken gösterilen başlık
-    en: 'Come Back! 🧐'  // İngilizce: Sekme arkaplanda iken gösterilen başlık
+    personal: {
+        tr: 'Geri Gel! 🧐',  // Türkçe: Sekme arkaplanda iken gösterilen başlık (Kişisel mod)
+        en: 'Come Back! 🧐'  // İngilizce: Sekme arkaplanda iken gösterilen başlık (Kişisel mod)
+    },
+    gamer: {
+        tr: 'Oyuna Geri Dön! 🎮',  // Türkçe: Sekme arkaplanda iken gösterilen başlık (Oyuncu mod)
+        en: 'Return to Game! 🎮'  // İngilizce: Sekme arkaplanda iken gösterilen başlık (Oyuncu mod)
+    }
 };
 
-// Mevcut dile göre gizlenmiş başlığı döndürür
+// Mevcut dile ve moda göre gizlenmiş başlığı döndürür
 function getCurrentHiddenTitle() {
     const currentLang = document.body.classList.contains('lang-en') ? 'en' : 'tr';
-    return hiddenTitles[currentLang];
+    const currentMode = document.body.classList.contains('gamer-mode-active') ? 'gamer' : 'personal';
+    return hiddenTitles[currentMode][currentLang];
 }
 
 /* ========================================
@@ -119,17 +126,21 @@ function setLanguage(lang) {
     enBtn.classList.toggle('active', lang === 'en');
     
     // ÇEVIRILMESI GEREKEN ELEMENLER
-    // Bio bölümünü çevir
-    const bio = document.querySelector('.bio');
-    if (bio && bio.hasAttribute('data-tr') && bio.hasAttribute('data-en')) {
-        bio.textContent = bio.getAttribute(`data-${lang}`);
-    }
+    // Bio bölümünü çevir (her iki mod için)
+    const bios = document.querySelectorAll('.bio');
+    bios.forEach(bio => {
+        if (bio && bio.hasAttribute('data-tr') && bio.hasAttribute('data-en')) {
+            bio.textContent = bio.getAttribute(`data-${lang}`);
+        }
+    });
     
-    // Açıklama bölümünü çevir
-    const description = document.querySelector('.description');
-    if (description && description.hasAttribute('data-tr') && description.hasAttribute('data-en')) {
-        description.textContent = description.getAttribute(`data-${lang}`);
-    }
+    // Açıklama bölümünü çevir (her iki mod için)
+    const descriptions = document.querySelectorAll('.description');
+    descriptions.forEach(description => {
+        if (description && description.hasAttribute('data-tr') && description.hasAttribute('data-en')) {
+            description.textContent = description.getAttribute(`data-${lang}`);
+        }
+    });
     
     // Email butonundaki metni çevir
     const emailLink = document.querySelector('a[href^="mailto:"]');
@@ -140,18 +151,16 @@ function setLanguage(lang) {
         }
     }
     
-    // Footer metnini çevir
-    const footerSpan = document.querySelector('.footer span');
-    if (footerSpan && footerSpan.hasAttribute('data-tr') && footerSpan.hasAttribute('data-en')) {
-        footerSpan.textContent = footerSpan.getAttribute(`data-${lang}`);
-    }
+    // Footer metnini çevir (her iki mod için)
+    const footerSpans = document.querySelectorAll('.footer span[data-tr]');
+    footerSpans.forEach(footerSpan => {
+        if (footerSpan && footerSpan.hasAttribute('data-tr') && footerSpan.hasAttribute('data-en')) {
+            footerSpan.textContent = footerSpan.getAttribute(`data-${lang}`);
+        }
+    });
     
-    // Sayfa başlığını çevir
-    const title = document.querySelector('title');
-    if (title && title.hasAttribute('data-tr') && title.hasAttribute('data-en')) {
-        title.textContent = title.getAttribute(`data-${lang}`);
-        originalTitle = title.textContent; // Tab değişimi için güncelle
-    }
+    // Sayfa başlığını çevir (moda göre)
+    updateTitleForMode();
     
     // Meta etiketlerini çevir (SEO)
     const metaTags = document.querySelectorAll('meta[data-tr][data-en]');
@@ -188,8 +197,8 @@ class ParticleSystem {
         this.canvas = document.getElementById('particleCanvas');
         this.ctx = this.canvas.getContext('2d');
         this.particles = [];
-        this.particleCount = 50; // Ekrandaki partikül sayısı
         this.mouse = { x: 0, y: 0 };
+        this.time = 0; // Animasyon zamanı (oyuncu modu efektleri için)
         
         this.init();
         this.bindEvents();
@@ -210,15 +219,21 @@ class ParticleSystem {
     // Rastgele partiküller oluştur
     createParticles() {
         this.particles = [];
-        for (let i = 0; i < this.particleCount; i++) {
+        const isGamerMode = document.body.classList.contains('gamer-mode-active');
+        const particleCount = this.getParticleCount();
+        
+        for (let i = 0; i < particleCount; i++) {
+            const isGamer = isGamerMode;
             this.particles.push({
                 x: Math.random() * this.canvas.width,
                 y: Math.random() * this.canvas.height,
-                vx: (Math.random() - 0.5) * 0.5, // X hızı
-                vy: (Math.random() - 0.5) * 0.5, // Y hızı
-                size: Math.random() * 2 + 1,
-                opacity: Math.random() * 0.5 + 0.2,
-                originalOpacity: Math.random() * 0.5 + 0.2
+                vx: (Math.random() - 0.5) * (isGamer ? 1.2 : 0.5), // Oyuncu modunda daha hızlı
+                vy: (Math.random() - 0.5) * (isGamer ? 1.2 : 0.5),
+                size: Math.random() * (isGamer ? 3 : 2) + (isGamer ? 1.5 : 1),
+                opacity: Math.random() * (isGamer ? 0.8 : 0.5) + (isGamer ? 0.4 : 0.2),
+                originalOpacity: Math.random() * (isGamer ? 0.8 : 0.5) + (isGamer ? 0.4 : 0.2),
+                colorType: isGamer ? (Math.random() > 0.5 ? 'primary' : 'alt') : 'normal', // Renk tipi
+                pulseSpeed: isGamer ? Math.random() * 0.02 + 0.01 : 0 // Pulse hızı
             });
         }
     }
@@ -226,17 +241,46 @@ class ParticleSystem {
     // Mevcut tema rengine göre partikül renklerini döndür
     getThemeColors() {
         const isDark = document.body.classList.contains('dark');
+        const isGamerMode = document.body.classList.contains('gamer-mode-active');
+        
+        // Oyuncu modunda özel renkler
+        if (isGamerMode) {
+            return {
+                particle: 'rgba(99, 102, 241, ', // Indigo
+                particleAlt: 'rgba(139, 92, 246, ', // Purple
+                connection: 'rgba(99, 102, 241, ',
+                connectionAlt: 'rgba(139, 92, 246, '
+            };
+        }
+        
+        // Normal mod
         return {
             particle: isDark ? 'rgba(250, 250, 250, ' : 'rgba(10, 10, 10, ',
             connection: isDark ? 'rgba(250, 250, 250, ' : 'rgba(10, 10, 10, '
         };
     }
     
+    // Oyuncu modunda partikül sayısını artır
+    getParticleCount() {
+        const isGamerMode = document.body.classList.contains('gamer-mode-active');
+        return isGamerMode ? 80 : 50; // Oyuncu modunda daha fazla partikül
+    }
+    
     // Partiküllerin pozisyonlarını ve hızlarını güncelle
     updateParticles() {
         const colors = this.getThemeColors();
+        const isGamerMode = document.body.classList.contains('gamer-mode-active');
+        this.time += 0.016; // ~60fps için zaman artışı
         
-        this.particles.forEach(particle => {
+        this.particles.forEach((particle, index) => {
+            // Oyuncu modunda pulse efekti
+            if (isGamerMode && particle.pulseSpeed) {
+                const pulse = Math.sin(this.time * particle.pulseSpeed + index) * 0.3 + 1;
+                particle.currentOpacity = particle.originalOpacity * pulse;
+            } else {
+                particle.currentOpacity = particle.originalOpacity;
+            }
+            
             // Pozisyonu hıza göre güncelle
             particle.x += particle.vx;
             particle.y += particle.vy;
@@ -253,58 +297,114 @@ class ParticleSystem {
             particle.x = Math.max(0, Math.min(this.canvas.width, particle.x));
             particle.y = Math.max(0, Math.min(this.canvas.height, particle.y));
             
-            // Fare etkileşimi (100px menzil içinde)
+            // Fare etkileşimi (oyuncu modunda daha geniş menzil)
+            const mouseRange = isGamerMode ? 150 : 100;
             const dx = this.mouse.x - particle.x;
             const dy = this.mouse.y - particle.y;
             const distance = Math.sqrt(dx * dx + dy * dy);
             
-            if (distance < 100) {
+            if (distance < mouseRange) {
                 // Fare yakınlığına göre partikülü etkile
-                const force = (100 - distance) / 100;
-                particle.vx -= (dx / distance) * force * 0.01;
-                particle.vy -= (dy / distance) * force * 0.01;
-                particle.opacity = particle.originalOpacity + force * 0.3; // Parlaklık artışı
+                const force = (mouseRange - distance) / mouseRange;
+                const forceMultiplier = isGamerMode ? 0.02 : 0.01;
+                particle.vx -= (dx / distance) * force * forceMultiplier;
+                particle.vy -= (dy / distance) * force * forceMultiplier;
+                particle.currentOpacity = particle.originalOpacity + force * (isGamerMode ? 0.5 : 0.3);
             } else {
-                particle.opacity = particle.originalOpacity;
+                particle.currentOpacity = particle.originalOpacity;
             }
             
-            // Hızı sınırla (çok hızlı hareket etmesini engelle)
-            particle.vx = Math.max(-1, Math.min(1, particle.vx));
-            particle.vy = Math.max(-1, Math.min(1, particle.vy));
+            // Hızı sınırla (oyuncu modunda daha yüksek hız limiti)
+            const maxSpeed = isGamerMode ? 2 : 1;
+            particle.vx = Math.max(-maxSpeed, Math.min(maxSpeed, particle.vx));
+            particle.vy = Math.max(-maxSpeed, Math.min(maxSpeed, particle.vy));
         });
     }
     
     // Partikülleri ve bağlantıları çiz
     drawParticles() {
         const colors = this.getThemeColors();
-        
-        // Partikülleri çiz (küçük daireler)
-        this.particles.forEach(particle => {
-            this.ctx.beginPath();
-            this.ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
-            this.ctx.fillStyle = colors.particle + particle.opacity + ')';
-            this.ctx.fill();
-        });
+        const isGamerMode = document.body.classList.contains('gamer-mode-active');
         
         // Birbirine yakın partiküller arasında çizgiler çiz (network efekti)
+        // Oyuncu modunda önce çizgileri çiz, böylece partiküller üstte kalır
+        const connectionRange = isGamerMode ? 150 : 120;
         for (let i = 0; i < this.particles.length; i++) {
             for (let j = i + 1; j < this.particles.length; j++) {
                 const dx = this.particles[i].x - this.particles[j].x;
                 const dy = this.particles[i].y - this.particles[j].y;
                 const distance = Math.sqrt(dx * dx + dy * dy);
                 
-                // 120px menzil içindeki partiküller arasında çizgi çiz
-                if (distance < 120) {
-                    const opacity = (120 - distance) / 120 * 0.1; // Mesafeye göre şeffaflık
+                if (distance < connectionRange) {
+                    const opacityFactor = isGamerMode ? 0.2 : 0.1;
+                    const opacity = (connectionRange - distance) / connectionRange * opacityFactor;
+                    
+                    // Oyuncu modunda gradient çizgiler
+                    if (isGamerMode) {
+                        const gradient = this.ctx.createLinearGradient(
+                            this.particles[i].x, this.particles[i].y,
+                            this.particles[j].x, this.particles[j].y
+                        );
+                        const color1 = colors.connection + opacity + ')';
+                        const color2 = colors.connectionAlt ? colors.connectionAlt + opacity + ')' : color1;
+                        gradient.addColorStop(0, color1);
+                        gradient.addColorStop(1, color2);
+                        this.ctx.strokeStyle = gradient;
+                    } else {
+                        this.ctx.strokeStyle = colors.connection + opacity + ')';
+                    }
+                    
                     this.ctx.beginPath();
                     this.ctx.moveTo(this.particles[i].x, this.particles[i].y);
                     this.ctx.lineTo(this.particles[j].x, this.particles[j].y);
-                    this.ctx.strokeStyle = colors.connection + opacity + ')';
-                    this.ctx.lineWidth = 0.5;
+                    this.ctx.lineWidth = isGamerMode ? 1 : 0.5;
                     this.ctx.stroke();
                 }
             }
         }
+        
+        // Partikülleri çiz (oyuncu modunda glow efekti ile)
+        this.particles.forEach(particle => {
+            const opacity = particle.currentOpacity || particle.opacity || particle.originalOpacity;
+            
+            if (isGamerMode) {
+                // Glow efekti için dış halka
+                const glowGradient = this.ctx.createRadialGradient(
+                    particle.x, particle.y, 0,
+                    particle.x, particle.y, particle.size * 3
+                );
+                const color = particle.colorType === 'alt' && colors.particleAlt 
+                    ? colors.particleAlt 
+                    : colors.particle;
+                glowGradient.addColorStop(0, color + opacity + ')');
+                glowGradient.addColorStop(0.5, color + opacity * 0.5 + ')');
+                glowGradient.addColorStop(1, color + '0)');
+                
+                this.ctx.beginPath();
+                this.ctx.arc(particle.x, particle.y, particle.size * 3, 0, Math.PI * 2);
+                this.ctx.fillStyle = glowGradient;
+                this.ctx.fill();
+            }
+            
+            // Ana partikül
+            this.ctx.beginPath();
+            this.ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+            const particleColor = isGamerMode 
+                ? (particle.colorType === 'alt' && colors.particleAlt 
+                    ? colors.particleAlt 
+                    : colors.particle)
+                : colors.particle;
+            this.ctx.fillStyle = particleColor + opacity + ')';
+            this.ctx.fill();
+            
+            // Oyuncu modunda iç parlaklık
+            if (isGamerMode) {
+                this.ctx.beginPath();
+                this.ctx.arc(particle.x, particle.y, particle.size * 0.5, 0, Math.PI * 2);
+                this.ctx.fillStyle = 'rgba(255, 255, 255, ' + (opacity * 0.6) + ')';
+                this.ctx.fill();
+            }
+        });
     }
     
     // Animasyon döngüsü
@@ -338,14 +438,149 @@ class ParticleSystem {
 }
 
 /* ========================================
+   MODE TOGGLE SYSTEM
+   ======================================== */
+// Mod değiştirme sistemi (Kişisel/Oyuncu)
+const modeToggleBtn = document.getElementById('modeToggleBtn');
+const personalMode = document.getElementById('personalMode');
+const gamerMode = document.getElementById('gamerMode');
+
+// Varsayılan mod: her zaman kişisel mod (localStorage yok sayılıyor)
+const defaultMode = 'personal';
+
+// Sayfa yüklendiğinde modu ayarla
+function setMode(mode) {
+    if (!personalMode || !gamerMode || !modeToggleBtn) {
+        console.error('Mode elements not found');
+        return;
+    }
+    
+    if (mode === 'gamer') {
+        body.classList.add('gamer-mode-active');
+        personalMode.classList.remove('active');
+        gamerMode.classList.add('active');
+        modeToggleBtn.textContent = '👤'; // Kişisel moda geç butonu
+    } else {
+        body.classList.remove('gamer-mode-active');
+        personalMode.classList.add('active');
+        gamerMode.classList.remove('active');
+        modeToggleBtn.textContent = '🎮'; // Oyuncu moduna geç butonu
+    }
+    // Mod tercihini localStorage'a kaydetme (her zaman kişisel modda başlasın)
+    // localStorage.setItem('siteMode', mode); // Devre dışı
+    
+    // İkonları yeniden yükle (Lucide)
+    lucide.createIcons();
+    
+    // Dil ayarlarını güncelle (her iki mod için de)
+    const currentLang = document.body.classList.contains('lang-en') ? 'en' : 'tr';
+    setLanguage(currentLang);
+    
+    // Title'ı moda göre güncelle
+    updateTitleForMode();
+    
+    // Partikülleri moda göre yeniden oluştur
+    if (particleSystem) {
+        particleSystem.createParticles();
+    }
+}
+
+// Title'ı mevcut mod ve dile göre güncelle
+function updateTitleForMode() {
+    const currentLang = document.body.classList.contains('lang-en') ? 'en' : 'tr';
+    const currentMode = document.body.classList.contains('gamer-mode-active') ? 'gamer' : 'personal';
+    const title = document.querySelector('title');
+    
+    if (title) {
+        const titleAttr = `data-${currentLang}-${currentMode}`;
+        const newTitle = title.getAttribute(titleAttr);
+        if (newTitle) {
+            title.textContent = newTitle;
+            originalTitle = newTitle;
+        }
+    }
+    
+    // Meta etiketlerini de güncelle
+    updateMetaTagsForMode();
+}
+
+// Meta etiketlerini mevcut mod ve dile göre güncelle
+function updateMetaTagsForMode() {
+    const currentLang = document.body.classList.contains('lang-en') ? 'en' : 'tr';
+    const currentMode = document.body.classList.contains('gamer-mode-active') ? 'gamer' : 'personal';
+    
+    // OG Title
+    const ogTitle = document.querySelector('meta[property="og:title"]');
+    if (ogTitle) {
+        const titleAttr = `data-${currentLang}-${currentMode}`;
+        const newTitle = ogTitle.getAttribute(titleAttr);
+        if (newTitle) {
+            ogTitle.setAttribute('content', newTitle);
+        }
+    }
+    
+    // OG Description
+    const ogDesc = document.querySelector('meta[property="og:description"]');
+    if (ogDesc) {
+        const descAttr = `data-${currentLang}-${currentMode}`;
+        const newDesc = ogDesc.getAttribute(descAttr);
+        if (newDesc) {
+            ogDesc.setAttribute('content', newDesc);
+        }
+    }
+    
+    // Twitter Title
+    const twitterTitle = document.querySelector('meta[name="twitter:title"]');
+    if (twitterTitle && ogTitle) {
+        twitterTitle.setAttribute('content', ogTitle.getAttribute('content'));
+    }
+    
+    // Twitter Description
+    const twitterDesc = document.querySelector('meta[name="twitter:description"]');
+    if (twitterDesc && ogDesc) {
+        twitterDesc.setAttribute('content', ogDesc.getAttribute('content'));
+    }
+}
+
+// DOM yüklendiğinde mod sistemini başlat
+function initModeSystem() {
+    if (!modeToggleBtn || !personalMode || !gamerMode) {
+        console.error('Mode toggle elements not found');
+        return;
+    }
+    
+    // İlk yüklemede her zaman kişisel modda başla
+    setMode(defaultMode);
+    
+    // Mod toggle butonuna tıklama eventi
+    modeToggleBtn.addEventListener('click', () => {
+        const currentMode = body.classList.contains('gamer-mode-active') ? 'gamer' : 'personal';
+        const newMode = currentMode === 'gamer' ? 'personal' : 'gamer';
+        setMode(newMode);
+    });
+}
+
+/* ========================================
    INITIALIZATION
    ======================================== */
-// Sayfa yüklendiğinde partikül sistemini başlat
+// Particle system instance'ını global tut (mod değişikliklerinde erişmek için)
+let particleSystem = null;
+
+// DOM hazır olduğunda mod sistemini başlat
+document.addEventListener('DOMContentLoaded', () => {
+    // Mod sistemini başlat
+    initModeSystem();
+});
+
+// Sayfa tamamen yüklendiğinde partikül sistemini başlat
 window.addEventListener('load', () => {
-    new ParticleSystem();
+    particleSystem = new ParticleSystem();
     
-    // Orijinal başlığı güncelle (tab değişimi için)
-    originalTitle = document.title;
+    // Title'ı başlangıç moduna göre güncelle
+    if (typeof updateTitleForMode === 'function') {
+        updateTitleForMode();
+        originalTitle = document.title;
+    }
 });
 
 /* ========================================
