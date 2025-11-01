@@ -192,6 +192,10 @@ class ParticleSystem {
         this.particles = [];
         this.mouse = { x: 0, y: 0 };
         this.time = 0;
+        this.isVisible = true;
+        this.animationFrameId = null;
+        this.lastMouseUpdate = 0;
+        this.mouseThrottle = 16; // ~60fps için throttle
         
         this.init();
         this.bindEvents();
@@ -213,7 +217,8 @@ class ParticleSystem {
     createParticles() {
         this.particles = [];
         const isGamerMode = document.body.classList.contains('gamer-mode-active');
-        const particleCount = isGamerMode ? 120 : 70; // Kişisel modda network efekti için daha fazla
+        // Performans optimizasyonu: Partikül sayısını azalt
+        const particleCount = isGamerMode ? 50 : 35; // Daha az partikül = daha iyi performans
         
         for (let i = 0; i < particleCount; i++) {
             const rand = Math.random();
@@ -230,7 +235,7 @@ class ParticleSystem {
                     ? (rand < 0.4 ? 'primary' : rand < 0.8 ? 'alt' : 'live')
                     : (rand < 0.4 ? 'cyber' : rand < 0.7 ? 'network' : 'secure'),
                 pulseSpeed: isGamerMode ? Math.random() * 0.03 + 0.015 : Math.random() * 0.02 + 0.005, // Kişisel modda yavaş pulse
-                trail: [], // Partikül izi için
+                // Trail kaldırıldı - performans optimizasyonu
                 dataFlow: !isGamerMode ? Math.random() * Math.PI * 2 : 0 // Kişisel modda veri akışı açısı
             });
         }
@@ -285,13 +290,7 @@ class ParticleSystem {
                 particle.currentOpacity = particle.originalOpacity;
             }
             
-            // Trail efekti (sadece oyuncu modu)
-            if (isGamerMode && particle.trail) {
-                particle.trail.push({ x: particle.x, y: particle.y, opacity: particle.currentOpacity });
-                if (particle.trail.length > 5) {
-                    particle.trail.shift();
-                }
-            }
+            // Trail efekti kaldırıldı - performans optimizasyonu
             
             // Kişisel mod: Veri akışı efekti (network benzeri)
             if (!isGamerMode && particle.dataFlow !== undefined) {
@@ -351,170 +350,62 @@ class ParticleSystem {
     drawParticles() {
         const colors = this.getThemeColors();
         const isGamerMode = document.body.classList.contains('gamer-mode-active');
-        const connectionRange = isGamerMode ? 180 : 120; // Daha geniş bağlantı ağı
+        const connectionRange = isGamerMode ? 150 : 100; // Performans için biraz azaltıldı
+        const connectionRangeSq = connectionRange * connectionRange; // sqrt'den kaçınmak için
         
-        // Partiküller arası bağlantılar
+        // Partiküller arası bağlantılar - Optimize edilmiş
         for (let i = 0; i < this.particles.length; i++) {
             for (let j = i + 1; j < this.particles.length; j++) {
                 const dx = this.particles[i].x - this.particles[j].x;
                 const dy = this.particles[i].y - this.particles[j].y;
-                const distance = Math.sqrt(dx * dx + dy * dy);
+                const distanceSq = dx * dx + dy * dy; // sqrt yerine squared distance kullan
                 
-                if (distance < connectionRange) {
+                if (distanceSq < connectionRangeSq) {
+                    const distance = Math.sqrt(distanceSq); // Sadece gerektiğinde sqrt hesapla
                     const opacityFactor = isGamerMode ? 0.25 : 0.1;
                     const opacity = Math.pow((connectionRange - distance) / connectionRange, 2) * opacityFactor;
                     
+                    // Performans optimizasyonu: Basit renk kullan (gradient yerine)
+                    let connectionColor;
                     if (isGamerMode) {
-                        // Renk tipine göre gradient oluştur
-                        let color1, color2;
                         if (this.particles[i].colorType === 'live' || this.particles[j].colorType === 'live') {
-                            color1 = colors.connectionLive;
-                            color2 = this.particles[i].colorType === 'alt' || this.particles[j].colorType === 'alt' 
-                                ? colors.connectionAlt : colors.connection;
+                            connectionColor = colors.connectionLive;
                         } else if (this.particles[i].colorType === 'alt' || this.particles[j].colorType === 'alt') {
-                            color1 = colors.connection;
-                            color2 = colors.connectionAlt;
+                            connectionColor = colors.connectionAlt;
                         } else {
-                            color1 = colors.connection;
-                            color2 = colors.connectionAlt;
+                            connectionColor = colors.connection;
                         }
-                        
-                        const gradient = this.ctx.createLinearGradient(
-                            this.particles[i].x, this.particles[i].y,
-                            this.particles[j].x, this.particles[j].y
-                        );
-                        gradient.addColorStop(0, color1 + opacity + ')');
-                        gradient.addColorStop(0.5, (color1 || colors.connection) + opacity * 1.5 + ')');
-                        gradient.addColorStop(1, color2 + opacity + ')');
-                        this.ctx.strokeStyle = gradient;
-                        this.ctx.lineWidth = 1.5; // Daha kalın çizgiler
-                        this.ctx.shadowBlur = 5;
-                        this.ctx.shadowColor = color1 + '0.5)';
                     } else {
-                        // Kişisel mod: Siber güvenlik teması - network bağlantıları
-                        let color1, color2;
                         if (this.particles[i].colorType === 'secure' || this.particles[j].colorType === 'secure') {
-                            color1 = colors.connectionSecure;
-                            color2 = this.particles[i].colorType === 'network' || this.particles[j].colorType === 'network' 
-                                ? colors.connectionAlt : colors.connection;
+                            connectionColor = colors.connectionSecure;
                         } else if (this.particles[i].colorType === 'network' || this.particles[j].colorType === 'network') {
-                            color1 = colors.connection;
-                            color2 = colors.connectionAlt;
+                            connectionColor = colors.connectionAlt;
                         } else {
-                            color1 = colors.connection;
-                            color2 = colors.connection;
+                            connectionColor = colors.connection;
                         }
-                        
-                        const gradient = this.ctx.createLinearGradient(
-                            this.particles[i].x, this.particles[i].y,
-                            this.particles[j].x, this.particles[j].y
-                        );
-                        gradient.addColorStop(0, color1 + opacity + ')');
-                        gradient.addColorStop(0.5, color1 + opacity * 1.2 + ')');
-                        gradient.addColorStop(1, color2 + opacity + ')');
-                        this.ctx.strokeStyle = gradient;
-                        this.ctx.lineWidth = 0.8; // İnce network çizgileri
-                        this.ctx.shadowBlur = 3;
-                        this.ctx.shadowColor = color1 + '0.4)';
                     }
+                    
+                    this.ctx.strokeStyle = connectionColor + opacity + ')';
+                    this.ctx.lineWidth = isGamerMode ? 1.2 : 0.7;
+                    // Shadow blur kaldırıldı - performans optimizasyonu
                     
                     this.ctx.beginPath();
                     this.ctx.moveTo(this.particles[i].x, this.particles[i].y);
                     this.ctx.lineTo(this.particles[j].x, this.particles[j].y);
                     this.ctx.stroke();
-                    this.ctx.shadowBlur = 0; // Shadow'u sıfırla
                 }
             }
         }
         
-        // Partikülleri çiz
+        // Partikülleri çiz - Optimize edilmiş (glow efektleri basitleştirildi)
         this.particles.forEach(particle => {
             const opacity = particle.currentOpacity || particle.originalOpacity;
             
-            // Trail efekti (oyuncu modu)
-            if (isGamerMode && particle.trail && particle.trail.length > 1) {
-                for (let i = 0; i < particle.trail.length - 1; i++) {
-                    const trailPoint = particle.trail[i];
-                    const nextPoint = particle.trail[i + 1];
-                    const trailOpacity = (i / particle.trail.length) * opacity * 0.3;
-                    
-                    const trailColor = particle.colorType === 'live' 
-                        ? colors.particleLive 
-                        : particle.colorType === 'alt' 
-                        ? colors.particleAlt 
-                        : colors.particle;
-                    
-                    this.ctx.beginPath();
-                    this.ctx.strokeStyle = trailColor + trailOpacity + ')';
-                    this.ctx.lineWidth = 1;
-                    this.ctx.moveTo(trailPoint.x, trailPoint.y);
-                    this.ctx.lineTo(nextPoint.x, nextPoint.y);
-                    this.ctx.stroke();
-                }
-            }
-            
-            // Glow efektleri
-            if (isGamerMode) {
-                // Oyuncu modu glow
-                const particleColor = particle.colorType === 'live' 
-                    ? colors.particleLive 
-                    : particle.colorType === 'alt' 
-                    ? colors.particleAlt 
-                    : colors.particle;
-                
-                const outerGlow = this.ctx.createRadialGradient(
-                    particle.x, particle.y, 0,
-                    particle.x, particle.y, particle.size * 5
-                );
-                outerGlow.addColorStop(0, particleColor + opacity * 0.3 + ')');
-                outerGlow.addColorStop(0.3, particleColor + opacity * 0.15 + ')');
-                outerGlow.addColorStop(0.6, particleColor + opacity * 0.05 + ')');
-                outerGlow.addColorStop(1, particleColor + '0)');
-                
-                this.ctx.beginPath();
-                this.ctx.arc(particle.x, particle.y, particle.size * 5, 0, Math.PI * 2);
-                this.ctx.fillStyle = outerGlow;
-                this.ctx.fill();
-                
-                const innerGlow = this.ctx.createRadialGradient(
-                    particle.x, particle.y, 0,
-                    particle.x, particle.y, particle.size * 2.5
-                );
-                innerGlow.addColorStop(0, particleColor + opacity + ')');
-                innerGlow.addColorStop(0.5, particleColor + opacity * 0.6 + ')');
-                innerGlow.addColorStop(1, particleColor + '0)');
-                
-                this.ctx.beginPath();
-                this.ctx.arc(particle.x, particle.y, particle.size * 2.5, 0, Math.PI * 2);
-                this.ctx.fillStyle = innerGlow;
-                this.ctx.fill();
-            } else {
-                // Kişisel mod: Minimal cyber glow
-                const particleColor = particle.colorType === 'secure' 
-                    ? colors.particleSecure 
-                    : particle.colorType === 'network' 
-                    ? colors.particleAlt 
-                    : colors.particle;
-                
-                const cyberGlow = this.ctx.createRadialGradient(
-                    particle.x, particle.y, 0,
-                    particle.x, particle.y, particle.size * 3
-                );
-                cyberGlow.addColorStop(0, particleColor + opacity * 0.4 + ')');
-                cyberGlow.addColorStop(0.5, particleColor + opacity * 0.15 + ')');
-                cyberGlow.addColorStop(1, particleColor + '0)');
-                
-                this.ctx.beginPath();
-                this.ctx.arc(particle.x, particle.y, particle.size * 3, 0, Math.PI * 2);
-                this.ctx.fillStyle = cyberGlow;
-                this.ctx.fill();
-            }
-            
-            // Ana partikül
+            // Basit glow efekti (performans için gradient yerine basit renk)
             const particleColor = isGamerMode 
                 ? (particle.colorType === 'live' 
                     ? colors.particleLive 
-                    : particle.colorType === 'alt' && colors.particleAlt 
+                    : particle.colorType === 'alt' 
                     ? colors.particleAlt 
                     : colors.particle)
                 : (particle.colorType === 'secure' 
@@ -523,51 +414,76 @@ class ParticleSystem {
                     ? colors.particleAlt 
                     : colors.particle);
             
+            // Glow için basit dairesel alan (gradient yerine)
+            if (isGamerMode) {
+                this.ctx.beginPath();
+                this.ctx.arc(particle.x, particle.y, particle.size * 3, 0, Math.PI * 2);
+                this.ctx.fillStyle = particleColor + (opacity * 0.15) + ')';
+                this.ctx.fill();
+            } else {
+                this.ctx.beginPath();
+                this.ctx.arc(particle.x, particle.y, particle.size * 2, 0, Math.PI * 2);
+                this.ctx.fillStyle = particleColor + (opacity * 0.1) + ')';
+                this.ctx.fill();
+            }
+            
+            // Ana partikül - Basitleştirilmiş
             this.ctx.beginPath();
             this.ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
             this.ctx.fillStyle = particleColor + opacity + ')';
             this.ctx.fill();
-            
-            // İç parlaklık
-            if (isGamerMode) {
-                // Oyuncu modu: Parlak iç
-                this.ctx.beginPath();
-                this.ctx.arc(particle.x, particle.y, particle.size * 0.6, 0, Math.PI * 2);
-                this.ctx.fillStyle = 'rgba(255, 255, 255, ' + (opacity * 0.8) + ')';
-                this.ctx.fill();
-            } else {
-                // Kişisel mod: Hafif cyber parlaklık
-                this.ctx.beginPath();
-                this.ctx.arc(particle.x, particle.y, particle.size * 0.5, 0, Math.PI * 2);
-                this.ctx.fillStyle = particleColor + (opacity * 1.2) + ')';
-                this.ctx.fill();
-            }
         });
     }
     
-    // Animasyon döngüsü
+    // Animasyon döngüsü - Visibility API ile optimize edilmiş
     animate() {
+        // Sekme görünür değilse animasyonu durdur
+        if (!this.isVisible) {
+            this.animationFrameId = requestAnimationFrame(() => this.animate());
+            return;
+        }
+        
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.updateParticles();
         this.drawParticles();
-        requestAnimationFrame(() => this.animate());
+        this.animationFrameId = requestAnimationFrame(() => this.animate());
     }
     
     // Event listener'ları bağla
     bindEvents() {
+        // Resize event'i throttle edildi
+        let resizeTimeout;
         window.addEventListener('resize', () => {
-            this.resize();
-            this.createParticles();
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                this.resize();
+                this.createParticles();
+            }, 150);
         });
         
+        // Mouse move throttle edildi - performans optimizasyonu
         window.addEventListener('mousemove', (e) => {
-            this.mouse.x = e.clientX;
-            this.mouse.y = e.clientY;
+            const now = Date.now();
+            if (now - this.lastMouseUpdate >= this.mouseThrottle) {
+                this.mouse.x = e.clientX;
+                this.mouse.y = e.clientY;
+                this.lastMouseUpdate = now;
+            }
         });
         
         window.addEventListener('mouseleave', () => {
             this.mouse.x = -1000;
             this.mouse.y = -1000;
+        });
+        
+        // Visibility API - Sekme arka planda iken animasyonu durdur
+        document.addEventListener('visibilitychange', () => {
+            this.isVisible = !document.hidden;
+            if (!this.isVisible && this.animationFrameId) {
+                cancelAnimationFrame(this.animationFrameId);
+            } else if (this.isVisible) {
+                this.animate();
+            }
         });
     }
 }
@@ -669,4 +585,285 @@ document.addEventListener('visibilitychange', () => {
     } else {
         document.title = originalTitle;
     }
+});
+
+/* ========================================
+   İLK ZİYARET REHBERİ
+   ======================================== */
+
+// Rehber sistemini başlat
+function initGuideSystem() {
+    // Daha önce ziyaret edilmiş mi kontrol et
+    const hasVisitedBefore = localStorage.getItem('hasVisitedBefore') === 'true';
+    
+    if (hasVisitedBefore) {
+        return; // Daha önce ziyaret edildiyse rehberi gösterme
+    }
+    
+    // Rehber overlay'ini oluştur
+    const guideOverlay = document.createElement('div');
+    guideOverlay.id = 'guideOverlay';
+    guideOverlay.classList.add('guide-overlay');
+    document.body.appendChild(guideOverlay);
+    
+    // Rehber adımları
+    let currentStep = 0;
+    const steps = [
+        {
+            target: 'language-switcher',
+            position: 'bottom',
+            message: {
+                tr: 'Dil değiştirmek için TR/EN butonlarını kullanabilirsiniz.',
+                en: 'You can use TR/EN buttons to change the language.'
+            },
+            title: {
+                tr: 'Dil Seçimi',
+                en: 'Language Selection'
+            }
+        },
+        {
+            target: 'modeToggleBtn',
+            position: 'left',
+            message: {
+                tr: 'Kişisel ve oyun modları arasında geçiş yapmak için bu butonu kullanabilirsiniz.',
+                en: 'You can use this button to switch between personal and gaming modes.'
+            },
+            title: {
+                tr: 'Mod Değiştirme',
+                en: 'Mode Toggle'
+            }
+        }
+    ];
+    
+    // Adımı göster
+    function showStep(stepIndex) {
+        if (stepIndex >= steps.length) {
+            // Rehber tamamlandı
+            closeGuide();
+            return;
+        }
+        
+        const step = steps[stepIndex];
+        const targetElement = document.querySelector(`.${step.target}`) || document.getElementById(step.target);
+        
+        if (!targetElement) {
+            // Element bulunamazsa bir sonraki adıma geç
+            showStep(stepIndex + 1);
+            return;
+        }
+        
+        const currentLang = document.body.classList.contains('lang-en') ? 'en' : 'tr';
+        const message = step.message[currentLang];
+        const title = step.title[currentLang];
+        
+        // Tooltip'i oluştur veya güncelle
+        let tooltip = document.getElementById('guideTooltip');
+        if (!tooltip) {
+            tooltip = document.createElement('div');
+            tooltip.id = 'guideTooltip';
+            tooltip.classList.add('guide-tooltip');
+            document.body.appendChild(tooltip);
+        }
+        
+        // Tooltip içeriği
+        tooltip.innerHTML = `
+            <div class="guide-tooltip-header">
+                <span class="guide-tooltip-title">${title}</span>
+                <button class="guide-close-btn" id="guideCloseBtn">×</button>
+            </div>
+            <div class="guide-tooltip-content">${message}</div>
+            <div class="guide-tooltip-footer">
+                <button class="guide-skip-btn" id="guideSkipBtn">${currentLang === 'tr' ? 'Atla' : 'Skip'}</button>
+                <button class="guide-next-btn" id="guideNextBtn">${currentLang === 'tr' ? stepIndex === steps.length - 1 ? 'Tamam' : 'Sonraki' : stepIndex === steps.length - 1 ? 'Done' : 'Next'}</button>
+            </div>
+        `;
+        
+        // Pozisyonu hesapla
+        const rect = targetElement.getBoundingClientRect();
+        const tooltipRect = tooltip.getBoundingClientRect();
+        let top, left;
+        
+        switch (step.position) {
+            case 'bottom':
+                top = rect.bottom + 15;
+                left = rect.left + (rect.width / 2) - (tooltipRect.width / 2);
+                tooltip.classList.add('guide-tooltip-bottom');
+                break;
+            case 'left':
+                top = rect.top + (rect.height / 2) - (tooltipRect.height / 2);
+                left = rect.right + 15;
+                tooltip.classList.add('guide-tooltip-left');
+                break;
+            case 'top':
+                top = rect.top - tooltipRect.height - 15;
+                left = rect.left + (rect.width / 2) - (tooltipRect.width / 2);
+                tooltip.classList.add('guide-tooltip-top');
+                break;
+            case 'right':
+                top = rect.top + (rect.height / 2) - (tooltipRect.height / 2);
+                left = rect.left - tooltipRect.width - 15;
+                tooltip.classList.add('guide-tooltip-right');
+                break;
+        }
+        
+        // Ekran sınırları kontrolü
+        if (left < 10) left = 10;
+        if (left + tooltipRect.width > window.innerWidth - 10) {
+            left = window.innerWidth - tooltipRect.width - 10;
+        }
+        if (top < 10) top = 10;
+        if (top + tooltipRect.height > window.innerHeight - 10) {
+            top = window.innerHeight - tooltipRect.height - 10;
+        }
+        
+        tooltip.style.top = top + 'px';
+        tooltip.style.left = left + 'px';
+        
+        // Tooltip'i göster ve pozisyonu tekrar hesapla (boyutlar hesaplandıktan sonra)
+        tooltip.style.display = 'block';
+        
+        // Boyutları aldıktan sonra pozisyonu tekrar hesapla
+        requestAnimationFrame(() => {
+            const finalRect = targetElement.getBoundingClientRect();
+            const finalTooltipRect = tooltip.getBoundingClientRect();
+            let finalTop = top;
+            let finalLeft = left;
+            
+            // Pozisyonu tekrar hesapla
+            switch (step.position) {
+                case 'bottom':
+                    finalTop = finalRect.bottom + 15;
+                    finalLeft = finalRect.left + (finalRect.width / 2) - (finalTooltipRect.width / 2);
+                    break;
+                case 'left':
+                    finalTop = finalRect.top + (finalRect.height / 2) - (finalTooltipRect.height / 2);
+                    finalLeft = finalRect.right + 15;
+                    break;
+                case 'top':
+                    finalTop = finalRect.top - finalTooltipRect.height - 15;
+                    finalLeft = finalRect.left + (finalRect.width / 2) - (finalTooltipRect.width / 2);
+                    break;
+                case 'right':
+                    finalTop = finalRect.top + (finalRect.height / 2) - (finalTooltipRect.height / 2);
+                    finalLeft = finalRect.left - finalTooltipRect.width - 15;
+                    break;
+            }
+            
+            // Ekran sınırları kontrolü
+            if (finalLeft < 10) finalLeft = 10;
+            if (finalLeft + finalTooltipRect.width > window.innerWidth - 10) {
+                finalLeft = window.innerWidth - finalTooltipRect.width - 10;
+            }
+            if (finalTop < 10) finalTop = 10;
+            if (finalTop + finalTooltipRect.height > window.innerHeight - 10) {
+                finalTop = window.innerHeight - finalTooltipRect.height - 10;
+            }
+            
+            tooltip.style.top = finalTop + 'px';
+            tooltip.style.left = finalLeft + 'px';
+        });
+        
+        // Target elementi vurgula
+        targetElement.classList.add('guide-highlight');
+        
+        // Event listener'ları ekle
+        const nextBtn = document.getElementById('guideNextBtn');
+        const skipBtn = document.getElementById('guideSkipBtn');
+        const closeBtn = document.getElementById('guideCloseBtn');
+        
+        // Eski listener'ları kaldır
+        const newNextBtn = nextBtn.cloneNode(true);
+        nextBtn.parentNode.replaceChild(newNextBtn, nextBtn);
+        const newSkipBtn = skipBtn.cloneNode(true);
+        skipBtn.parentNode.replaceChild(newSkipBtn, skipBtn);
+        const newCloseBtn = closeBtn.cloneNode(true);
+        closeBtn.parentNode.replaceChild(newCloseBtn, closeBtn);
+        
+        newNextBtn.addEventListener('click', () => {
+            targetElement.classList.remove('guide-highlight');
+            currentStep = stepIndex + 1;
+            showStep(currentStep);
+        });
+        
+        newSkipBtn.addEventListener('click', () => {
+            closeGuide();
+        });
+        
+        newCloseBtn.addEventListener('click', () => {
+            closeGuide();
+        });
+    }
+    
+    // Rehberi kapat
+    function closeGuide() {
+        // Highlight'ları kaldır
+        document.querySelectorAll('.guide-highlight').forEach(el => {
+            el.classList.remove('guide-highlight');
+        });
+        
+        // Tooltip'i kaldır
+        const tooltip = document.getElementById('guideTooltip');
+        if (tooltip) {
+            tooltip.remove();
+        }
+        
+        // Overlay'i kaldır
+        const overlay = document.getElementById('guideOverlay');
+        if (overlay) {
+            overlay.remove();
+        }
+        
+        // Ziyaret edildi olarak işaretle
+        localStorage.setItem('hasVisitedBefore', 'true');
+    }
+    
+    // Dil değiştiğinde tooltip'i güncelle - Observer ile dinle
+    const updateTooltipLanguage = (lang) => {
+        const tooltip = document.getElementById('guideTooltip');
+        if (tooltip && currentStep < steps.length) {
+            const step = steps[currentStep];
+            const message = step.message[lang];
+            const title = step.title[lang];
+            const titleEl = tooltip.querySelector('.guide-tooltip-title');
+            const contentEl = tooltip.querySelector('.guide-tooltip-content');
+            if (titleEl) titleEl.textContent = title;
+            if (contentEl) contentEl.textContent = message;
+            const nextBtn = tooltip.querySelector('#guideNextBtn');
+            if (nextBtn) {
+                nextBtn.textContent = currentStep === steps.length - 1 
+                    ? (lang === 'tr' ? 'Tamam' : 'Done')
+                    : (lang === 'tr' ? 'Sonraki' : 'Next');
+            }
+            const skipBtn = tooltip.querySelector('#guideSkipBtn');
+            if (skipBtn) {
+                skipBtn.textContent = lang === 'tr' ? 'Atla' : 'Skip';
+            }
+        }
+    };
+    
+    // Dil butonlarına listener ekle
+    const trBtnEl = document.getElementById('trBtn');
+    const enBtnEl = document.getElementById('enBtn');
+    
+    if (trBtnEl) {
+        trBtnEl.addEventListener('click', () => {
+            setTimeout(() => updateTooltipLanguage('tr'), 100);
+        });
+    }
+    
+    if (enBtnEl) {
+        enBtnEl.addEventListener('click', () => {
+            setTimeout(() => updateTooltipLanguage('en'), 100);
+        });
+    }
+    
+    // İlk adımı göster (biraz gecikme ile)
+    setTimeout(() => {
+        showStep(0);
+    }, 500);
+}
+
+// DOM yüklendiğinde rehber sistemini başlat
+document.addEventListener('DOMContentLoaded', () => {
+    initGuideSystem();
 });
