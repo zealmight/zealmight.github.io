@@ -13,7 +13,7 @@ lucide.createIcons();
 let originalTitle = document.title;
 const hiddenTitles = {
     personal: {
-        tr: 'Geri Gel! 🧐',
+        tr: 'Geri Gel! 🧐', 
         en: 'Come Back! 🧐'
     },
     gamer: {
@@ -28,28 +28,6 @@ function getCurrentHiddenTitle() {
     const currentMode = document.body.classList.contains('gamer-mode-active') ? 'gamer' : 'personal';
     return hiddenTitles[currentMode][currentLang];
 }
-
-/* ========================================
-   GÜVENLİK ÖZELLİKLERİ
-   ======================================== */
-
-// Sağ tıklama engelle
-document.addEventListener('contextmenu', (e) => e.preventDefault());
-
-// Developer tools kısayollarını engelle
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'F12' || 
-        (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) ||
-        (e.ctrlKey && e.key === 'u')) {
-        e.preventDefault();
-    }
-});
-
-// Metin seçimini engelle
-document.addEventListener('selectstart', (e) => e.preventDefault());
-
-// Drag & drop engelle
-document.addEventListener('dragstart', (e) => e.preventDefault());
 
 /* ========================================
    TEMA DEĞİŞTİRİCİ
