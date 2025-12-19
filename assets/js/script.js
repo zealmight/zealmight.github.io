@@ -21,7 +21,8 @@ const translations = {
         skills_cat_web: "Web Teknolojileri",
         contact_title: "İletişim",
         contact_desc: "İletişim kurmak için lütfen eposta gönderin",
-        contact_btn: "Bana Ulaşın"
+        contact_btn: "Bana Ulaşın",
+        footer_text: "&copy; 2025 Onat Dibo. Tüm hakları saklıdır."
     },
     en: {
         nav_home: "Home",
@@ -36,7 +37,8 @@ const translations = {
         skills_cat_web: "Web Technologies",
         contact_title: "Contact",
         contact_desc: "Please send an email to contact me",
-        contact_btn: "Contact Me"
+        contact_btn: "Contact Me",
+        footer_text: "&copy; 2025 Onat Dibo. All rights reserved."
     }
 };
 
@@ -132,6 +134,9 @@ function updateLanguage(lang) {
     document.querySelector('[data-i18n="contact_desc"]').textContent = texts.contact_desc;
     document.querySelector('[data-i18n="contact_btn"]').textContent = texts.contact_btn;
 
+    // -- Footer --
+    document.querySelector('[data-i18n="footer_text"]').innerHTML = texts.footer_text;
+
     // 3. Dil değiştirme butonunun metnini *diğer* seçenek olarak güncelle
     langToggleBtn.textContent = lang === 'tr' ? 'EN' : 'TR';
 
@@ -153,7 +158,7 @@ langToggleBtn.addEventListener('click', () => {
 // Menü aç/kapat
 mobileMenuBtn.addEventListener('click', () => {
     navLinks.classList.toggle('active');
-    
+
     // İkonu değiştir (Hamburger / Çarpı)
     if (navLinks.classList.contains('active')) {
         mobileMenuIcon.classList.remove('fa-bars');
