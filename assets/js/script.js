@@ -49,6 +49,9 @@ const translations = {
 const themeToggleBtn = document.getElementById('theme-toggle');
 const langToggleBtn = document.getElementById('lang-toggle');
 const themeIcon = themeToggleBtn.querySelector('i'); // Tema butonu içindeki ikon
+const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+const navLinks = document.querySelector('.nav-links');
+const mobileMenuIcon = mobileMenuBtn.querySelector('i');
 
 /*
     ==========================================================================
@@ -140,6 +143,38 @@ function updateLanguage(lang) {
 langToggleBtn.addEventListener('click', () => {
     currentLang = currentLang === 'tr' ? 'en' : 'tr';
     updateLanguage(currentLang);
+});
+
+/*
+    ==========================================================================
+    MOBİL MENÜ MANTIĞI
+    ==========================================================================
+*/
+// Menü aç/kapat
+mobileMenuBtn.addEventListener('click', () => {
+    navLinks.classList.toggle('active');
+    
+    // İkonu değiştir (Hamburger / Çarpı)
+    if (navLinks.classList.contains('active')) {
+        mobileMenuIcon.classList.remove('fa-bars');
+        mobileMenuIcon.classList.add('fa-xmark');
+        // Sayfa kaydırmayı engelle (Opsiyonel)
+        document.body.style.overflow = 'hidden';
+    } else {
+        mobileMenuIcon.classList.remove('fa-xmark');
+        mobileMenuIcon.classList.add('fa-bars');
+        document.body.style.overflow = 'auto';
+    }
+});
+
+// Linke tıklandığında menüyü kapat
+document.querySelectorAll('.nav-links a').forEach(link => {
+    link.addEventListener('click', () => {
+        navLinks.classList.remove('active');
+        mobileMenuIcon.classList.remove('fa-xmark');
+        mobileMenuIcon.classList.add('fa-bars');
+        document.body.style.overflow = 'auto';
+    });
 });
 
 // Uygulamayı başlat

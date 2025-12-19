@@ -482,13 +482,58 @@ ul {
 */
 @media (max-width: 768px) {
     .nav-links {
-        display: none;
-        /* Mobilde linkleri gizle (Gelecekte hamburger menü eklenebilir) */
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        top: 60px;
+        /* Navbar yüksekliği */
+        left: -100%;
+        width: 100%;
+        height: calc(100vh - 60px);
+        background-color: var(--nav-bg);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        gap: 0;
+        transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        padding: 20px 0;
+        border-top: 1px solid var(--border-color);
+        z-index: 999;
+        text-align: center;
+    }
+
+    .nav-links.active {
+        left: 0;
+    }
+
+    .nav-links li {
+        width: 100%;
+    }
+
+    .nav-links a {
+        display: inline-block;
+        /* fit-content gibi davranması için */
+        padding: 15px 0;
+        font-size: 1.1rem;
+        width: auto;
+        position: relative;
+    }
+
+    .nav-links a::after {
+        bottom: 10px;
+        /* Mobilde yazının biraz daha yakınına */
     }
 
     .mobile-menu-btn {
         display: block;
         /* Menü butonunu göster */
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        background-color: var(--bg-alt);
+        border: 1px solid var(--border-color);
     }
 
     .hero-section {
