@@ -2,183 +2,185 @@
 <html lang="tr">
 
 <head>
-    <!-- Temel Meta Etiketleri -->
+    <!-- 
+        META ETİKETLERİ:
+        Mobil cihazlarda duyarlı (responsive) davranış için karakter kümesini ve görünüm ayarlarını tanımlar.
+    -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <!-- Güvenlik Başlıkları -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-ancestors 'none';">
-    <meta http-equiv="X-Content-Type-Options" content="nosniff">
-    <meta http-equiv="X-Frame-Options" content="DENY">
-    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
-    <meta name="referrer" content="strict-origin-when-cross-origin">
-    
-    <!-- Open Graph Meta Etiketleri (Sosyal Medya Paylaşımı İçin) -->
-    <meta property="og:title" content="Onat Dibo | Hakkımda" data-tr-personal="Onat Dibo | Hakkımda" data-en-personal="Onat Dibo | About Me" data-tr-gamer="ZealMight | İçerik Üreticisi" data-en-gamer="ZealMight | Content Creator">
-    <meta property="og:description" content="Sosyal medya hesapları ve iletişim bilgilerime buradan ulaşabilirsiniz." data-tr-personal="Sosyal medya hesapları ve iletişim bilgilerime buradan ulaşabilirsiniz." data-en-personal="You can access my social media accounts and contact information here." data-tr-gamer="Valorant oyuncusu, canlı yayıncı ve içerik üreticisi. Kick, YouTube ve Discord hesaplarımı takip edebilirsiniz." data-en-gamer="Valorant player, streamer and content creator. Follow me on Kick, YouTube and Discord.">
-    <meta property="og:type" content="profile">
-    <meta property="og:image" content="https://onatdibo.com/img/profile.jpg">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    <meta property="og:image:type" content="image/jpeg">
-    <meta property="og:url" content="https://onatdibo.com">
-    
-    <!-- Twitter Card Meta Etiketleri -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Onat Dibo | Hakkımda">
-    <meta name="twitter:description" content="Sosyal medya hesapları ve iletişim bilgilerime buradan ulaşabilirsiniz.">
-    <meta name="twitter:image" content="https://onatdibo.com/img/profile.jpg">
-    
-    <!-- Favicon ve CSS -->
-    <link rel="icon" href="img/favicon.png">
-    <link rel="stylesheet" href="assets/css/style.css">
-    
-    <!-- Sayfa Başlığı (Dinamik - Mod ve Dile Göre Değişir) -->
-    <title data-tr-personal="Onat Dibo | Hakkımda" data-en-personal="Onat Dibo | About Me" data-tr-gamer="ZealMight | İçerik Üreticisi" data-en-gamer="ZealMight | Content Creator">Onat Dibo | Hakkımda</title>
+    <title>Hakkımda | Onat Dibo</title>
+
+    <!-- FAVICON: Sekme çubuğunda görünen ikon -->
+    <link rel="icon" type="image/jpeg" href="/assets/img/logo.jpeg">
+
+    <!-- 
+        FONTLAR:
+        Google Fonts üzerinden 'Inter' yazı tipini yüklüyoruz.
+        preconnect bağlantıları, bağlantıyı erken kurarak yükleme performansını artırır.
+    -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- 
+        İKONLAR:
+        Github logosu, Ay/Güneş ikonu vb. ikonları kullanmak için FontAwesome kütüphanesi.
+    -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- 
+        ÖZEL CSS:
+        Ana stil dosyamızı projeye dahil ediyoruz. css/ klasörü altında bulunur.
+    -->
+    <link rel="stylesheet" href="/assets/css/style.css">
 </head>
 
 <body>
-    <!-- Arkaplan Partikül Animasyonu Canvas -->
-    <canvas id="particleCanvas"></canvas>
-    
-    <!-- Kontrol Butonları (Sağ Üst) -->
-    <div class="control-buttons">
-        <button class="mode-toggle-btn" id="modeToggleBtn" aria-label="Mod Değiştir" title="Kişisel/Oyuncu Modu">🎮</button>
-        <button class="theme-btn" id="themeBtn" aria-label="Tema">🌙</button>
-    </div>
-    
-    <!-- Dil Değiştirme Butonları (Sol Üst) -->
-    <div class="language-switcher">
-        <button class="lang-btn active" id="trBtn" data-lang="tr">TR</button>
-        <button class="lang-btn" id="enBtn" data-lang="en">EN</button>
-    </div>
 
-    <!-- Ana İçerik Wrapper -->
-    <div class="wrapper">
-        <!-- Kişisel Mod: Profesyonel Profil -->
-        <div class="content-mode personal-mode active" id="personalMode">
-            <div class="header">
-                <img src="img/profile.jpg" alt="Onat Dibo" class="avatar">
-                <div class="name">Onat Dibo</div>
-                <div class="bio" data-tr="Siber Güvenlik | Ağ" data-en="Cyber Security | Network">Siber Güvenlik | Ağ</div>
-                <div class="description" data-tr="Bilgisayar Teknolojileri mezunu, Cisco onaylı Siber Güvenlik sertifikasına sahip. Sürekli öğrenme motivasyonu yüksek, sektördeki gelişmeleri yakından takip eden ve yenilikçi çözümler üretmeye odaklanan bir teknoloji profesyoneli." data-en="Computer Technologies graduate with Cisco certified Cyber Security certification. A technology professional with high continuous learning motivation, closely following industry developments and focused on producing innovative solutions.">Bilgisayar Teknolojileri mezunu, Cisco onaylı Siber Güvenlik sertifikasına sahip. Sürekli öğrenme motivasyonu yüksek, sektördeki gelişmeleri yakından takip eden ve yenilikçi çözümler üretmeye odaklanan bir teknoloji profesyoneli.</div>
-            </div>
-
-            <!-- Sosyal Medya Linkleri -->
-            <div class="links">
-
-                <a href="https://linkedin.com/in/onatdibo" target="_blank" rel="noopener noreferrer" class="link">
-                    <div class="link-left">
-                        <i data-lucide="linkedin" class="link-icon"></i>
-                        <span>LinkedIn</span>
-                    </div>
-                    <i data-lucide="arrow-right" class="link-arrow"></i>
-                </a>
-
-                <a href="https://github.com/zealmight" target="_blank" rel="noopener noreferrer" class="link">
-                    <div class="link-left">
-                        <i data-lucide="github" class="link-icon"></i>
-                        <span>GitHub</span>
-                    </div>
-                    <i data-lucide="arrow-right" class="link-arrow"></i>
-                </a>
-
-
-                <a href="https://medium.com/@onatdibo" target="_blank" rel="noopener noreferrer" class="link">
-                    <div class="link-left">
-                        <i data-lucide="notebook-text" class="link-icon"></i>
-                        <span>Medium</span>
-                    </div>
-                    <i data-lucide="arrow-right" class="link-arrow"></i>
-                </a>
-
-                <a href="https://tryhackme.com/p/onatdibo" target="_blank" rel="noopener noreferrer" class="link">
-                    <div class="link-left">
-                        <i data-lucide="shield  " class="link-icon"></i>
-                        <span>TryHacMe</span>
-                    </div>
-                    <i data-lucide="arrow-right" class="link-arrow"></i>
-                    
-                </a>
-
-                <a href="https://instagram.com/zealmght" target="_blank" rel="noopener noreferrer" class="link">
-                    <div class="link-left">
-                        <i data-lucide="instagram" class="link-icon"></i>
-                        <span>Instagram</span>
-                    </div>
-                    <i data-lucide="arrow-right" class="link-arrow"></i>
-                </a>
-
-                <a href="mailto:onatdibo@proton.me" class="link">
-                    <div class="link-left">
-                        <i data-lucide="mail" class="link-icon"></i>
-                        <span data-tr="E-Posta Gönder" data-en="Send Email">E-Posta Gönder</span>
-                    </div>
-                    <i data-lucide="arrow-right" class="link-arrow"></i>
-                </a>
+    <!-- 
+        NAVİGASYON ÇUBUĞU (NAVBAR):
+        Logo, navigasyon linkleri ve kontrol butonlarını (Tema/Dil) içerir.
+    -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="#" class="logo">Onat Dibo</a>
+            <ul class="nav-links">
+                <!-- data-i18n nitelikleri, JS tarafından bu elementleri bulup çevirmek için kullanılır -->
+                <li><a href="#home" data-i18n="nav_home">Ana Sayfa</a></li>
+                <li><a href="#about" data-i18n="nav_about">Hakkımda</a></li>
+                <li><a href="#skills" data-i18n="nav_skills">Yetenekler</a></li>
+                <li><a href="#contact" data-i18n="nav_contact">İletişim</a></li>
+            </ul>
+            <div class="nav-controls">
+                <button id="theme-toggle" class="icon-btn" aria-label="Temayı Değiştir">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button id="lang-toggle" class="text-btn" aria-label="Dili Değiştir">EN</button>
+                <!-- Mobil menü butonu (Sadece küçük ekranlarda CSS ile görünür olur) -->
+                <button class="mobile-menu-btn" aria-label="Menü">
+                    <i class="fas fa-bars"></i>
+                </button>
             </div>
         </div>
+    </nav>
 
-        <!-- Oyuncu Mod: İçerik Üreticisi Profili -->
-        <div class="content-mode gamer-mode" id="gamerMode">
-            <div class="header">
-                <div class="avatar-wrapper">
-                    <img src="img/game_logo.png" alt="ZealMight" class="avatar">
-                    <span class="live-badge">LIVE</span>
-                    <span class="live-dot"></span>
+    <!-- 
+        HERO BÖLÜMÜ:
+        Fotoğraf, isim ve sosyal medya linklerinin bulunduğu ana giriş alanı.
+    -->
+    <section id="home" class="hero-section">
+        <div class="container hero-container">
+            <div class="hero-image">
+                <img src="/assets/img/logo.jpeg" alt="Profil Resmi">
+            </div>
+            <div class="hero-content">
+                <h1 id="name">Onat Dibo</h1>
+                <p id="title" class="subtitle" data-i18n="role">Siber Güvenlik</p>
+                <!-- Sosyal Medya İkonları -->
+                <div class="social-links">
+                    <a href="#" aria-label="Github"><i class="fab fa-github"></i></a>
+                    <a href="#" aria-label="Linkedin"><i class="fab fa-linkedin"></i></a>
+                    <a href="#" aria-label="Medium"><i class="fab fa-medium"></i></a>
+                    <a href="#" aria-label="TryHackMe" title="TryHackMe"><i class="fas fa-user-secret"></i></a>
                 </div>
-                <div class="name">ZealMight</div>
-                <div class="bio" data-tr="Dijital İçerik Üreticisi" data-en="Digital Content Creator">Dijital İçerik Üreticisi</div>
-                <div class="description" data-tr="Adım Onat, genellikle Valorant oynuyorum, bunun haricinde ise Hikaye ve Korku temalı oyunlar da oynuyorum. İlerleyen zamanlarda da IRL yayını yapmaya çalışıcam umarım kalıcı olursun." data-en="My name is Onat, I usually play Valorant, aside from that, I also play Story and Horror themed games. I'll try to do IRL streams in the future, I hope you stick around.">Adım Onat, genellikle Valorant oynuyorum, bunun haricinde ise Hikaye ve Korku temalı oyunlar da oynuyorum. İlerleyen zamanlarda da IRL yayını yapmaya çalışıcam umarım kalıcı olursun.</div>
-            </div>
-
-            <!-- Sosyal Medya Linkleri -->
-            <div class="links">
-                <a href="https://discord.gg/jtpDGunpYE" class="link">
-                    <div class="link-left">
-                        <i data-lucide="message-circle" class="link-icon"></i>
-                        <span>Discord</span>
-                    </div>
-                    <i data-lucide="arrow-right" class="link-arrow"></i>
-                </a>
-
-                <a href="https://kick.com/zealmight" target="_blank" rel="noopener noreferrer" class="link">
-                    <div class="link-left">
-                        <i data-lucide="video" class="link-icon"></i>
-                        <span>Kick</span>
-                    </div>
-                    <i data-lucide="arrow-right" class="link-arrow"></i>
-                </a>
-
-                <a href="https://youtube.com/@zealmght" target="_blank" rel="noopener noreferrer" class="link">
-                    <div class="link-left">
-                        <i data-lucide="youtube" class="link-icon"></i>
-                        <span>YouTube</span>
-                    </div>
-                    <i data-lucide="arrow-right" class="link-arrow"></i>
-                </a>
-
-                <a href="https://instagram.com/zealmght" target="_blank" rel="noopener noreferrer" class="link">
-                    <div class="link-left">
-                        <i data-lucide="instagram" class="link-icon"></i>
-                        <span>Instagram</span>
-                    </div>
-                    <i data-lucide="arrow-right" class="link-arrow"></i>
-                </a>
-                
             </div>
         </div>
+    </section>
 
-        <!-- Footer: Telif Hakkı (Moda Göre Değişir) -->
-        <div class="footer">
-            <span class="footer-personal" data-tr="© 2025 Onat Dibo.  Tüm hakları saklıdır." data-en="© 2025 Onat Dibo.  All rights reserved.">© 2025 Onat Dibo. Tüm hakları saklıdır.</span>
-            <span class="footer-gamer" data-tr="© 2025 ZealMight.  Oyun zamanı!" data-en="© 2025 ZealMight. Game time!">© 2025 ZealMight. Oyun zamanı!</span>
+    <!-- 
+        HAKKIMDA BÖLÜMÜ:
+        Kısa biyografi.
+    -->
+    <section id="about" class="section about-section">
+        <div class="container">
+            <h2 class="section-title" data-i18n="about_title">Hakkımda</h2>
+            <p class="section-desc" data-i18n="about_desc">
+                Bilgisayar Teknolojileri mezunu, Cisco onaylı Siber Güvenlik sertifikasına sahip. Sürekli öğrenme
+                motivasyonu yüksek, sektördeki gelişmeleri yakından takip eden ve yenilikçi çözümler üretmeye odaklanan
+                bir teknoloji profesyoneli.Bilgisayar Teknolojileri mezunu, Cisco onaylı Siber Güvenlik sertifikasına
+                sahip. Sürekli öğrenme motivasyonu yüksek, sektördeki gelişmeleri yakından takip eden ve yenilikçi
+                çözümler üretmeye odaklanan bir teknoloji profesyoneli.
+            </p>
         </div>
-    </div>
+    </section>
 
-    <!-- JavaScript Kütüphaneleri ve Scriptler -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="assets/js/main.js"></script>
+    <!-- 
+        YETENEKLER BÖLÜMÜ:
+        Teknik becerilerin Font Awesome ikonları ile ızgara (grid) düzeninde gösterimi.
+        Kategorilere ayrılmıştır.
+    -->
+    <section id="skills" class="section skills-section alt-bg">
+        <div class="container">
+            <h2 class="section-title" data-i18n="skills_title">Yetenekler</h2>
+
+            <!-- Kategori: Siber Güvenlik & Sistem -->
+            <h3 class="skill-category-title" data-i18n="skills_cat_security">Siber Güvenlik & Sistem</h3>
+            <div class="skills-grid">
+                <div class="skill-item">
+                    <i class="fab fa-linux text-gray-800"></i>
+                    <span>Linux</span>
+                    <div class="skill-level" style="width: 90%"></div>
+                </div>
+                <div class="skill-item">
+                    <i class="fas fa-network-wired text-blue-500"></i>
+                    <span>Network</span>
+                    <div class="skill-level" style="width: 50%"></div>
+                </div>
+                <div class="skill-item">
+                    <i class="fab fa-python text-blue-400"></i>
+                    <span>Python</span>
+                    <div class="skill-level" style="width: 70%"></div>
+                </div>
+            </div>
+
+            <!-- Kategori: Web Teknolojileri -->
+            <h3 class="skill-category-title" style="margin-top: 40px;" data-i18n="skills_cat_web">Web Teknolojileri</h3>
+            <div class="skills-grid">
+                <div class="skill-item">
+                    <i class="fab fa-html5 text-orange-500"></i>
+                    <span>HTML5</span>
+                    <div class="skill-level" style="width: 90%"></div>
+                </div>
+                <div class="skill-item">
+                    <i class="fab fa-css3-alt text-blue-600"></i>
+                    <span>CSS3</span>
+                    <div class="skill-level" style="width: 75%"></div>
+                </div>
+                <div class="skill-item">
+                    <i class="fab fa-js text-yellow-500"></i>
+                    <span>JavaScript</span>
+                    <div class="skill-level" style="width: 50%"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 
+        İLETİŞİM BÖLÜMÜ:
+    -->
+    <section id="contact" class="section contact-section">
+        <div class="container">
+            <h2 class="section-title" data-i18n="contact_title">İletişim</h2>
+            <p class="contact-text" data-i18n="contact_desc">Projeleriniz veya sorularınız için benimle iletişime geçin.
+            </p>
+            <a href="mailto:example@email.com" class="contact-btn">
+                <i class="fas fa-envelope"></i>
+                <span data-i18n="contact_btn">Bana Ulaşın</span>
+            </a>
+        </div>
+    </section>
+
+    <!-- FOOTER (ALT BİLGİ) -->
+    <footer class="footer">
+        <p>&copy; 2025 Onat Dibo. Tüm hakları saklıdır.</p>
+    </footer>
+
+    <!-- 
+        JAVASCRIPT:
+        Ana script dosyamızı yüklüyoruz. js/ klasörü altında bulunur.
+        Sayfa içeriği yüklendikten sonra çalışması için body sonuna eklenmiştir.
+    -->
+    <script src="/assets/js/script.js"></script>
 </body>
 
 </html>
