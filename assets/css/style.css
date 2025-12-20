@@ -1,1 +1,603 @@
-:root{--bg-body:#f8fafc;--bg-alt:#ffffff;--text-primary:#334155;--text-secondary:#64748b;--accent-color:#0d9488;--accent-hover:#0f766e;--border-color:#e2e8f0;--nav-bg:rgba(248,250,252,0.9);--card-shadow:0 4px 6px -1px rgba(0,0,0,0.05);} [data-theme="dark"]{--bg-body:#0f172a;--bg-alt:#1e293b;--text-primary:#e2e8f0;--text-secondary:#94a3b8;--accent-color:#2dd4bf;--accent-hover:#14b8a6;--border-color:#334155;--nav-bg:rgba(15,23,42,0.9);--card-shadow:0 10px 15px -3px rgba(0,0,0,0.5);} *{margin:0;padding:0;box-sizing:border-box;scroll-behavior:smooth;transition:background-color 0.3s ease,color 0.3s ease;} body{font-family:'Inter',sans-serif;background-color:var(--bg-body);color:var(--text-primary);line-height:1.6;} a{text-decoration:none;color:inherit;} ul{list-style:none;} .container{max-width:1024px;margin:0 auto;padding:0 20px;} .navbar{position:sticky;top:0;width:100%;background-color:var(--nav-bg);backdrop-filter:blur(10px);border-bottom:1px solid var(--border-color);z-index:1000;padding:0.6rem 0;} .nav-container{display:flex;justify-content:space-between;align-items:center;} .logo{font-size:1.5rem;font-weight:800;color:var(--accent-color);letter-spacing:-1px;} .nav-links{display:flex;gap:30px;} .nav-links a{font-size:0.95rem;font-weight:500;color:var(--text-secondary);transition:color 0.3s;position:relative;padding-bottom:5px;} .nav-links a::after{content:'';position:absolute;width:0;height:2px;bottom:0;left:0;background-color:var(--accent-color);transition:width 0.3s ease;} .nav-links a:hover{color:var(--accent-color);} .nav-links a:hover::after{width:100%;} .nav-controls{display:flex;align-items:center;gap:15px;} .mobile-menu-btn{display:none;background:none;border:none;font-size:1.2rem;color:var(--text-primary);cursor:pointer;} .icon-btn,.text-btn{background:none;border:none;cursor:pointer;font-size:1.1rem;color:var(--text-secondary);padding:5px;transition:color 0.2s;} .icon-btn:hover,.text-btn:hover{color:var(--accent-color);} .hero-section{padding:100px 0;text-align:center;} .hero-content{margin-top:20px;} .hero-image img{width:160px;height:160px;border-radius:50%;object-fit:cover;border:4px solid var(--accent-color);padding:4px;background-color:var(--bg-body);} #name{font-size:2.5rem;margin-top:15px;color:var(--text-primary);} .subtitle{font-size:1.2rem;color:var(--accent-color);margin-bottom:20px;font-weight:500;} .social-links{display:flex;justify-content:center;gap:20px;margin-top:20px;} .social-links a{font-size:1.4rem;color:var(--text-secondary);background-color:var(--bg-alt);width:50px;height:50px;display:flex;align-items:center;justify-content:center;border-radius:12px;transition:all 0.3s cubic-bezier(0.4,0,0.2,1);box-shadow:var(--card-shadow);border:1px solid var(--border-color);} .social-links a:hover{color:var(--accent-color);transform:translateY(-5px);border-color:var(--accent-color);box-shadow:0 10px 20px -5px rgba(13,148,136,0.2);} .section{padding:80px 0;} .section-title{text-align:center;font-size:1.8rem;margin-bottom:40px;color:var(--text-primary);position:relative;display:block;} .section-title::after{content:'';display:block;width:50px;height:3px;background-color:var(--accent-color);margin:10px auto 0;border-radius:2px;} .alt-bg{background-color:var(--bg-alt);} .section-desc{max-width:700px;margin:0 auto;text-align:center;font-size:1.1rem;color:var(--text-secondary);} .skill-category-title{text-align:center;font-size:1.2rem;color:var(--text-secondary);margin-bottom:20px;font-weight:600;} .skills-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,160px));justify-content:center;gap:20px;max-width:800px;margin:0 auto;} .skill-item{background-color:var(--bg-body);padding:20px;border-radius:12px;text-align:center;box-shadow:var(--card-shadow);border:1px solid var(--border-color);transition:transform 0.3s;} .skill-item:hover{transform:translateY(-5px);} .skill-item i{font-size:2.5rem;margin-bottom:10px;display:block;} .skill-item span{font-weight:600;color:var(--text-primary);} .skill-level{height:4px;background-color:var(--accent-color);margin-top:10px;border-radius:2px;opacity:0.7;} .contact-section{text-align:center;} .contact-text{font-size:1.1rem;max-width:600px;margin-left:auto;margin-right:auto;margin-bottom:30px;color:var(--text-secondary);} .contact-btn{display:inline-flex;align-items:center;gap:10px;background-color:var(--accent-color);color:white;padding:14px 40px;border-radius:50px;font-weight:600;font-size:1.1rem;transition:background-color 0.3s,box-shadow 0.3s;border:none;outline:none;} .contact-btn:hover{background-color:var(--accent-hover);box-shadow:0 4px 15px rgba(99,102,241,0.4);} .footer{padding:20px 0;text-align:center;border-top:1px solid var(--border-color);color:var(--text-secondary);font-size:0.9rem;} .modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background-color:rgba(0,0,0,0.5);backdrop-filter:blur(8px);display:flex;justify-content:center;align-items:center;z-index:2000;opacity:0;visibility:hidden;transition:all 0.3s ease;} .modal-overlay.active{opacity:1;visibility:visible;} .modal-content{background-color:var(--bg-alt);padding:30px;border-radius:20px;box-shadow:var(--card-shadow);max-width:400px;width:90%;position:relative;transform:translateY(20px);transition:transform 0.3s ease;text-align:center;border:1px solid var(--border-color);} .modal-overlay.active .modal-content{transform:translateY(0);} .modal-close{position:absolute;top:15px;right:15px;background:none;border:none;font-size:1.5rem;color:var(--text-secondary);cursor:pointer;transition:color 0.2s;} .modal-close:hover{color:var(--accent-color);} .modal-body p{font-size:1.1rem;color:var(--text-primary);margin-bottom:25px;font-weight:500;} .modal-send-btn{display:inline-flex;align-items:center;gap:10px;background-color:var(--accent-color);color:white;padding:12px 30px;border-radius:50px;font-weight:600;border:none;cursor:pointer;transition:background-color 0.3s,transform 0.2s;} .modal-send-btn:hover{background-color:var(--accent-hover);transform:scale(1.05);} .fa-github{color:#333;} [data-theme="dark"] .fa-github{color:#fff;} .fa-linkedin{color:#0077b5;} .fa-medium{color:#000;} [data-theme="dark"] .fa-medium{color:#fff;} .fa-user-secret{color:#C11111;} .text-yellow-500{color:#eab308;} .text-blue-500{color:#3b82f6;} .text-orange-500{color:#f97316;} .text-blue-600{color:#2563eb;} .text-blue-400{color:#60a5fa;}  .text-gray-800{color:#1f2937;} .text-indigo-600{color:#4f46e5;} @media (max-width:768px){.nav-links{display:flex;flex-direction:column;position:fixed;top:60px;left:-100%;width:100%;height:calc(100vh - 60px);background-color:var(--nav-bg);backdrop-filter:blur(15px);-webkit-backdrop-filter:blur(15px);gap:0;transition:left 0.4s cubic-bezier(0.4,0,0.2,1);padding:20px 0;border-top:1px solid var(--border-color);z-index:999;text-align:center;} .nav-links.active{left:0;} .nav-links li{width:100%;} .nav-links a{display:inline-block;padding:15px 0;font-size:1.1rem;width:auto;position:relative;} .nav-links a::after{bottom:10px;} .mobile-menu-btn{display:block;width:40px;height:40px;display:flex;align-items:center;justify-content:center;border-radius:8px;background-color:var(--bg-alt);border:1px solid var(--border-color);} .hero-section{padding:60px 0;} #name{font-size:2rem;} .section{padding:60px 0;} }
+/*
+    ==========================================================================
+    CSS DEĞİŞKENLERİ (CSS VARIABLES)
+    ==========================================================================
+    :root seçicisi, değişkenlerin tüm belgede geçerli olmasını sağlar.
+    Değişken kullanmak, bir rengi değiştirmek istediğinizde sadece tek bir satırı 
+    güncelleyerek tüm siteyi güncellemenize olanak tanır (Sürdürülebilirlik).
+*/
+:root {
+    --bg-body: #f8fafc;
+    --bg-alt: #ffffff;
+    --text-primary: #334155;
+    --text-secondary: #64748b;
+    --accent-color: #0d9488;
+    --accent-hover: #0f766e;
+    --border-color: #e2e8f0;
+    --nav-bg: rgba(248, 250, 252, 0.9);
+    --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+
+    /* Marka Renkleri - Social Media Brand Colors */
+    --brand-github: #333;
+    --brand-linkedin: #0077b5;
+    --brand-medium: #000;
+    --brand-tryhackme: #C11111;
+}
+
+/* 
+    KOYU TEMA (DARK MODE) AYARLARI
+    [data-theme="dark"] özelliği HTML etiketine JavaScript ile eklenir.
+    Bu durumda değişkenlerin değerlerini koyu mod için güncelliyoruz.
+*/
+[data-theme="dark"] {
+    --bg-body: #0f172a;
+    --bg-alt: #1e293b;
+    --text-primary: #e2e8f0;
+    --text-secondary: #94a3b8;
+    --accent-color: #2dd4bf;
+    --accent-hover: #14b8a6;
+    --border-color: #334155;
+    --nav-bg: rgba(15, 23, 42, 0.9);
+    --card-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+
+    --brand-github: #fff;
+    --brand-medium: #fff;
+}
+
+/* 
+    TEMEL STİLLER (BASE STYLES)
+    '*' seçicisi sayfadaki TÜM elementleri hedefler.
+*/
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    /* Padding ve border'ın genişliğe dahil edilmesini sağlar */
+    scroll-behavior: smooth;
+    /* Sayfa içi linklere yumuşak kayma efekti verir */
+    transition: background-color 0.3s ease, color 0.3s ease;
+    /* Renk değişimlerini akıcı yapar */
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-body);
+    /* Değişken kullanımı: var(--...) */
+    color: var(--text-primary);
+    line-height: 1.6;
+}
+
+a {
+    text-decoration: none;
+    /* Linklerin altındaki çizgiyi kaldırır */
+    color: inherit;
+    /* Link rengini ebeveyn elementten alır */
+}
+
+ul {
+    list-style: none;
+    /* Liste noktalarını kaldırır */
+}
+
+/* 
+    CONTAINER: İçeriği belirli bir genişlikte ortalar.
+*/
+.container {
+    max-width: 1024px;
+    margin: 0 auto;
+    /* Üst-alt 0, Sağ-sol 'auto' yaparak ortalar */
+    padding: 0 20px;
+}
+
+/* 
+    NAVBAR (NAVİGASYON)
+    sticky: Sayfayı aşağı kaydırdığınızda üstte sabit kalmasını sağlar.
+*/
+.navbar {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    background-color: var(--nav-bg);
+    backdrop-filter: blur(10px);
+    /* Arka planı bulanıklaştırır (Cam efekti) */
+    border-bottom: 1px solid var(--border-color);
+    z-index: 1000;
+    /* Diğer elementlerin üstünde görünmesini sağlar */
+    padding: 0.6rem 0;
+}
+
+.nav-container {
+    display: flex;
+    /* Flexbox: Elemanları yan yana dizmek için kullanılır */
+    justify-content: space-between;
+    /* Elemanlar arasına maksimum boşluk bırakır */
+    align-items: center;
+    /* Elemanları dikeyde ortalar */
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--accent-color);
+    letter-spacing: -1px;
+}
+
+.nav-links {
+    display: flex;
+    gap: 30px;
+    /* Elemanlar arasındaki boşluk */
+}
+
+.nav-links a {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    transition: color 0.3s;
+    position: relative;
+    padding-bottom: 5px;
+}
+
+/* Linklerin altındaki animasyonlu çizgi (Pseudo-element) */
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: var(--accent-color);
+    transition: width 0.3s ease;
+}
+
+.nav-links a:hover {
+    color: var(--accent-color);
+}
+
+.nav-links a:hover::after {
+    width: 100%;
+    /* Üzerine gelince çizgiyi tam genişlikte göster */
+}
+
+.nav-controls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.mobile-menu-btn {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    color: var(--text-primary);
+    cursor: pointer;
+}
+
+.icon-btn,
+.text-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    padding: 5px;
+    transition: color 0.2s;
+}
+
+.icon-btn:hover,
+.text-btn:hover {
+    color: var(--accent-color);
+}
+
+/* 
+    HERO SECTION (GİRİŞ BÖLÜMÜ) 
+*/
+.hero-section {
+    padding: 100px 0;
+    text-align: center;
+}
+
+.hero-content {
+    margin-top: 20px;
+}
+
+.hero-image img {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    /* Kare resmi daire yapar */
+    object-fit: cover;
+    /* Resmin oranını bozmadan alanı doldurmasını sağlar */
+    border: 4px solid var(--accent-color);
+    padding: 4px;
+    background-color: var(--bg-body);
+}
+
+#name {
+    font-size: 2.5rem;
+    margin-top: 15px;
+    color: var(--text-primary);
+}
+
+.subtitle {
+    font-size: 1.2rem;
+    color: var(--accent-color);
+    margin-bottom: 20px;
+    font-weight: 500;
+}
+
+/* Sosyal Medya Linkleri */
+.social-links {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.social-links a {
+    font-size: 1.4rem;
+    color: var(--text-secondary);
+    background-color: var(--bg-alt);
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: var(--card-shadow);
+    border: 1px solid var(--border-color);
+}
+
+.social-links a:hover {
+    color: var(--accent-color);
+    transform: translateY(-5px);
+    /* Hafif yukarı kaldırır */
+    border-color: var(--accent-color);
+    box-shadow: 0 10px 20px -5px rgba(13, 148, 136, 0.2);
+}
+
+/* Sections */
+.section {
+    padding: 80px 0;
+}
+
+.section-title {
+    text-align: center;
+    font-size: 1.8rem;
+    margin-bottom: 40px;
+    color: var(--text-primary);
+    position: relative;
+    display: block;
+}
+
+.section-title::after {
+    content: '';
+    display: block;
+    width: 50px;
+    height: 3px;
+    background-color: var(--accent-color);
+    margin: 10px auto 0;
+    border-radius: 2px;
+}
+
+.alt-bg {
+    background-color: var(--bg-alt);
+}
+
+.section-desc {
+    max-width: 700px;
+    margin: 0 auto;
+    text-align: center;
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+}
+
+/* Skills */
+.skill-category-title {
+    text-align: center;
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+/* 
+    YETENEKLER (SKILLS GRID)
+    Grid: Karmaşık ızgara düzenleri oluşturmak için kullanılır.
+*/
+.skills-grid {
+    display: grid;
+    /* auto-fit: Sığabildiği kadar elemanı yan yana dizer. 
+       minmax: Minimum 160px, maksimum 160px genişlik verir. */
+    grid-template-columns: repeat(auto-fit, minmax(160px, 160px));
+    justify-content: center;
+    gap: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.skill-item {
+    background-color: var(--bg-body);
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: var(--card-shadow);
+    border: 1px solid var(--border-color);
+    transition: transform 0.3s;
+}
+
+.skill-item:hover {
+    transform: translateY(-5px);
+}
+
+.skill-item i {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.skill-item span {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.skill-level {
+    height: 4px;
+    background-color: var(--accent-color);
+    margin-top: 10px;
+    border-radius: 2px;
+    opacity: 0.7;
+}
+
+/* Contact */
+.contact-section {
+    text-align: center;
+}
+
+.contact-text {
+    font-size: 1.1rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 30px;
+    color: var(--text-secondary);
+}
+
+.contact-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background-color: var(--accent-color);
+    color: white;
+    padding: 14px 40px;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: background-color 0.3s, box-shadow 0.3s;
+    border: none;
+    outline: none;
+    cursor: pointer;
+}
+
+.contact-btn:hover {
+    background-color: var(--accent-hover);
+    box-shadow: 0 4px 15px rgba(13, 148, 136, 0.4);
+}
+
+/* Footer */
+.footer {
+    padding: 20px 0;
+    text-align: center;
+    border-top: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+/* 
+    İLETİŞİM MODALI (POPUP) 
+*/
+.modal-overlay {
+    position: fixed;
+    /* Ekranın üzerinde sabit kalır */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Yarı saydam arka plan */
+    backdrop-filter: blur(8px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+/* Modalı görünür yapan sınıf */
+.modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-content {
+    background-color: var(--bg-alt);
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: var(--card-shadow);
+    max-width: 400px;
+    width: 90%;
+    position: relative;
+    transform: translateY(20px);
+    /* Hafif aşağıdan gelme efekti için */
+    transition: transform 0.3s ease;
+    text-align: center;
+    border: 1px solid var(--border-color);
+}
+
+.modal-overlay.active .modal-content {
+    transform: translateY(0);
+    /* Yerine geri dön */
+}
+
+.modal-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.modal-close:hover {
+    color: var(--accent-color);
+}
+
+.modal-body p {
+    font-size: 1.1rem;
+    color: var(--text-primary);
+    margin-bottom: 25px;
+    font-weight: 500;
+}
+
+.modal-send-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background-color: var(--accent-color);
+    color: white;
+    padding: 12px 30px;
+    border-radius: 50px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.modal-send-btn:hover {
+    background-color: var(--accent-hover);
+    transform: scale(1.05);
+}
+
+/* Social Media & Skill Colors */
+.fa-github {
+    color: var(--brand-github);
+}
+
+.fa-linkedin {
+    color: var(--brand-linkedin);
+}
+
+.fa-medium {
+    color: var(--brand-medium);
+}
+
+.fa-user-secret {
+    color: var(--brand-tryhackme);
+}
+
+.text-yellow-500 {
+    color: #eab308;
+}
+
+.text-blue-500 {
+    color: #3b82f6;
+}
+
+.text-orange-500 {
+    color: #f97316;
+}
+
+.text-blue-600 {
+    color: #2563eb;
+}
+
+.text-blue-400 {
+    color: #60a5fa;
+}
+
+.text-gray-800 {
+    color: #1f2937;
+}
+
+.text-indigo-600 {
+    color: #4f46e5;
+}
+
+/* 
+    DUYARLI TASARIM (RESPONSIVE DESIGN)
+    @media (max-width: 768px): Ekran genişliği 768px'den küçükse bu kuralları uygula.
+*/
+@media (max-width: 768px) {
+    .nav-links {
+        display: flex;
+        flex-direction: column;
+        /* Linkleri alt alta diz */
+        position: fixed;
+        top: 60px;
+        left: -100%;
+        /* Başlangıçta ekranın solunda gizli */
+        width: 100%;
+        height: calc(100vh - 60px);
+        background-color: var(--nav-bg);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        gap: 0;
+        transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        padding: 20px 0;
+        border-top: 1px solid var(--border-color);
+        z-index: 999;
+        text-align: center;
+    }
+
+    /* Menü aktif olduğunda ekrana getir */
+    .nav-links.active {
+        left: 0;
+    }
+
+    .nav-links li {
+        width: 100%;
+    }
+
+    .nav-links a {
+        display: inline-block;
+        padding: 15px 0;
+        font-size: 1.1rem;
+        width: auto;
+        position: relative;
+    }
+
+    .nav-links a::after {
+        bottom: 10px;
+    }
+
+    /* Mobil menü butonu mobilde görünür olsun */
+    .mobile-menu-btn {
+        display: block;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        background-color: var(--bg-alt);
+        border: 1px solid var(--border-color);
+    }
+
+    .hero-section {
+        padding: 60px 0;
+    }
+
+    #name {
+        font-size: 2rem;
+    }
+
+    .section {
+        padding: 60px 0;
+    }
+}

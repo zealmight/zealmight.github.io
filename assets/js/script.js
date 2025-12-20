@@ -83,145 +83,134 @@ const modalSendBtn = document.getElementById('modal-send-btn');
     ==========================================================================
     Mevcut ayarları saklar. Kullanıcının daha önce siteye girip girmediğini localStorage'dan kontrol eder.
 */
-let currentLang = 'tr'; // Varsayılan dil
-let currentTheme = localStorage.getItem('theme') || 'light'; // Kayıtlı temayı yükle veya varsayılan olarak açık (light) tema kullan
+/*
+    ==========================================================================
+    DURUM (STATE) YÖNETİMİ
+    ==========================================================================
+    Programlama dillerinde 'State' (durum), uygulamanın o anki verilerini saklar.
+    Burada 'localStorage' kullanarak kullanıcının tercihlerini tarayıcıda tutuyoruz.
+    Böylece sayfa yenilense bile ayarlar (tema, dil) kaybolmaz.
+*/
+// localStorage.getItem: Tarayıcı hafızasından veri çeker.
+// || (OR) operatörü: Eğer sol taraf boşsa (null), sağ taraftaki varsayılan değeri kullanır.
+let currentLang = localStorage.getItem('lang') || 'tr';
+let currentTheme = localStorage.getItem('theme') || 'light';
 
 /*
     ==========================================================================
-    BAŞLATMA (INIT)
+    BAŞLATMA (INIT) FONKSİYONU
     ==========================================================================
-    Sayfa yüklendiğinde kayıtlı ayarları uygulamak için bu fonksiyon çalışır.
+    'init' kısaltması 'initialization' (başlatma) kelimesinden gelir. 
+    Sayfa yüklenir yüklenmez çalıştırılacak olan temel ayarları içerir.
 */
 function init() {
-    setTheme(currentTheme);
-    updateLanguage(currentLang);
+    setTheme(currentTheme); // Başlangıçta temayı ayarla
+    updateLanguage(currentLang); // Başlangıçta dili ayarla
+}
+
+/* 
+    YARDIMCI FONKSİYON: toggleScroll 
+    'isLocked' parametresi boolean (true/false) bir değer alır.
+    CSS 'overflow' özelliği 'hidden' yapıldığında sayfa kaydırılamaz hale gelir.
+    Bu, menü veya modal açıkken arka planın kaymasını engellemek için kullanılır.
+*/
+function toggleScroll(isLocked) {
+    document.body.style.overflow = isLocked ? 'hidden' : 'auto';
 }
 
 /*
     ==========================================================================
-    TEMA MANTIĞI
+    TEMA YÖNETİMİ (DARK/LIGHT MODE)
     ==========================================================================
-    Koyu (Dark) ve Açık (Light) mod arasındaki geçişi yönetir.
 */
 function setTheme(theme) {
-    // 1. <html> etiketine data-theme özniteliği ekle. CSS bunu kullanarak renkleri ayarlar.
+    // setAttribute: HTML elementine ('html' etiketi gibi) yeni bir özellik ekler.
+    // CSS dosyasında [data-theme="dark"] seçicisi bu değere göre renkleri değiştirir.
     document.documentElement.setAttribute('data-theme', theme);
 
-    // 2. Tercihi tarayıcı hafızasına kaydet, böylece sonraki ziyarette hatırlar.
+    // Değişikliği tarayıcı hafızasına kaydet.
     localStorage.setItem('theme', theme);
     currentTheme = theme;
 
-    // 3. İkonu güncelle (Açık mod için Ay, Koyu mod için Güneş)
-    if (theme === 'dark') {
-        themeIcon.classList.remove('fa-moon');
-        themeIcon.classList.add('fa-sun');
-    } else {
-        themeIcon.classList.remove('fa-sun');
-        themeIcon.classList.add('fa-moon');
-    }
+    // classList.toggle: Eğer sınıfa sahipse kaldırır, değilse ekler.
+    // 'fa-sun' (Güneş) ve 'fa-moon' (Ay) ikonları arasında geçiş yapıyoruz.
+    themeIcon.classList.toggle('fa-sun', theme === 'dark');
+    themeIcon.classList.toggle('fa-moon', theme !== 'dark');
 }
 
-// Olay Dinleyicisi: Tema butonuna tıklandığında temayı değiştir.
+// Olay Dinleyicisi (Event Listener): Kullanıcı bir elemente tıkladığında çalışır.
 themeToggleBtn.addEventListener('click', () => {
-    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-    setTheme(newTheme);
+    // Üçlü Operatör (Ternary): 'currentTheme' light ise dark yap, değilse light yap.
+    setTheme(currentTheme === 'light' ? 'dark' : 'light');
 });
 
 /*
     ==========================================================================
-    DİL MANTIĞI
+    DİL YÖNETİMİ (ÇEVİRİ)
     ==========================================================================
-    Metin içeriklerinin çevirisini yönetir.
 */
 function updateLanguage(lang) {
-    // 1. Seçilen dilin sözlüğünü al
-    const texts = translations[lang];
+    const texts = translations[lang]; // translations nesnesinden ilgili dilin verilerini çek.
+    currentLang = lang;
+    localStorage.setItem('lang', lang);
 
-    // 2. data-i18n özniteliğine sahip HTML elementlerini bul ve içeriklerini güncelle
-
-    // -- Navigasyon --
-    document.querySelector('[data-i18n="nav_home"]').textContent = texts.nav_home;
-    document.querySelector('[data-i18n="nav_about"]').textContent = texts.nav_about;
-    document.querySelector('[data-i18n="nav_skills"]').textContent = texts.nav_skills;
-    document.querySelector('[data-i18n="nav_contact"]').textContent = texts.nav_contact;
-
-    // -- İçerik Bölümleri --
-    document.querySelector('[data-i18n="role"]').textContent = texts.role;
-    document.querySelector('[data-i18n="about_title"]').textContent = texts.about_title;
-    document.querySelector('[data-i18n="about_desc"]').textContent = texts.about_desc;
-    document.querySelector('[data-i18n="skills_title"]').textContent = texts.skills_title;
-    document.querySelector('[data-i18n="skills_cat_security"]').textContent = texts.skills_cat_security;
-    document.querySelector('[data-i18n="skills_cat_web"]').textContent = texts.skills_cat_web;
-    document.querySelector('[data-i18n="contact_title"]').textContent = texts.contact_title;
-    document.querySelector('[data-i18n="contact_desc"]').textContent = texts.contact_desc;
-    document.querySelector('[data-i18n="contact_btn"]').textContent = texts.contact_btn;
-    document.querySelector('[data-i18n="modal_text"]').textContent = texts.modal_text;
-    document.querySelector('[data-i18n="modal_send"]').textContent = texts.modal_send;
-
-    // -- Footer --
-    document.querySelector('[data-i18n="footer_text"]').innerHTML = texts.footer_text;
-
-    // 3. Dil değiştirme butonunun metnini *diğer* seçenek olarak güncelle
-    langToggleBtn.textContent = lang === 'tr' ? 'EN' : 'TR';
-
-    // 4. Belgenin lang özniteliğini güncelle (SEO ve Erişilebilirlik için)
-    document.documentElement.lang = lang;
-
-    // 5. Section ID'lerini ve Linkleri Güncelle
-    updateSectionsAndLinks(lang);
-}
-
-/**
- * Section ID'lerini ve bunlara bağlı linkleri dile göre günceller.
- */
-function updateSectionsAndLinks(lang) {
-    const slugs = translations[lang].slugs;
-    const oldSlugs = translations[lang === 'tr' ? 'en' : 'tr'].slugs;
-
-    // Eşleme: Orijinal anahtar -> Yeni slug
-    const mapping = {
-        'home': slugs.home,
-        'about': slugs.about,
-        'skills': slugs.skills,
-        'contact': slugs.contact
-    };
-
-    // 1. Bölüm ID'lerini güncelle
-    Object.keys(mapping).forEach(key => {
-        const oldId = oldSlugs[key];
-        const newId = mapping[key];
-        const section = document.getElementById(oldId);
-        if (section) {
-            section.id = newId;
+    // querySelectorAll: Sayfadaki belirli bir özelliği taşıyan TÜM elementleri bulur.
+    // .forEach: Bulunan her bir element için sırayla bir işlem yapar (döngü).
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n'); // Elementin data-i18n değerini al (anahtar).
+        if (texts[key]) {
+            // Eğer anahtar 'footer_text' ise, içinde HTML kodu (simge vb.) olduğu için innerHTML kullanıyoruz.
+            if (key === 'footer_text') {
+                el.innerHTML = texts[key];
+            } else {
+                // Sadece düz metin ise .textContent daha güvenli ve hızlıdır.
+                el.textContent = texts[key];
+            }
         }
     });
 
-    // 2. Navigasyon ve diğer linkleri güncelle
-    document.querySelectorAll('a[href^="#"]').forEach(link => {
-        const href = link.getAttribute('href').substring(1);
-        // Href bir slug ise, hangi anahtara ait olduğunu bul ve yeni slug ile değiştir
-        Object.keys(oldSlugs).forEach(key => {
-            if (oldSlugs[key] === href) {
-                link.setAttribute('href', '#' + mapping[key]);
-            }
+    // Buton metnini değiştir (Eğer mevcut dil tr ise butonda EN yazmalı).
+    langToggleBtn.textContent = lang === 'tr' ? 'EN' : 'TR';
+
+    // HTML 'lang' özniteliğini güncelle (Arama motorları ve ekran okuyucular için önemli).
+    document.documentElement.lang = lang;
+
+    // Diğer dinamik güncellemeleri yap (Linkler ve ID'ler gibi).
+    updateSectionsAndLinks(lang);
+}
+
+/*
+    updateSectionsAndLinks:
+    ID'leri ve href linklerini dile göre günceller (SEO uyumlu URL hash'leri için).
+*/
+function updateSectionsAndLinks(lang) {
+    const slugs = translations[lang].slugs;
+    const otherLang = lang === 'tr' ? 'en' : 'tr';
+    const oldSlugs = translations[otherLang].slugs;
+
+    // Object.keys: Bir nesnenin içindeki tüm anahtar isimlerini bir dizi (array) olarak döndürür.
+    Object.keys(slugs).forEach(key => {
+        // Eski ID'li elementi bul ve yeni slug (kısaltma) ile ID'sini değiştir.
+        const section = document.getElementById(oldSlugs[key]);
+        if (section) section.id = slugs[key];
+
+        // Bu bölüme giden tüm linklerin (href="#...") adreslerini güncelle.
+        document.querySelectorAll(`a[href="#${oldSlugs[key]}"]`).forEach(link => {
+            link.setAttribute('href', '#' + slugs[key]);
         });
     });
 
-    // 3. URL hash'ini güncelle (Eğer mevcutsa ve bir slug ise)
+    // history.replaceState: Sayfayı yenilemeden URL'deki hash (#) kısmını günceller.
     const currentHash = window.location.hash.substring(1);
-    if (currentHash) {
-        Object.keys(oldSlugs).forEach(key => {
-            if (oldSlugs[key] === currentHash) {
-                history.replaceState(null, null, '#' + mapping[key]);
-            }
-        });
-    }
+    Object.keys(oldSlugs).forEach(key => {
+        if (oldSlugs[key] === currentHash) {
+            history.replaceState(null, null, '#' + slugs[key]);
+        }
+    });
 }
 
-// Olay Dinleyicisi: TR ve EN arasında geçiş yap
 langToggleBtn.addEventListener('click', () => {
-    currentLang = currentLang === 'tr' ? 'en' : 'tr';
-    updateLanguage(currentLang);
+    updateLanguage(currentLang === 'tr' ? 'en' : 'tr');
 });
 
 /*
@@ -229,63 +218,54 @@ langToggleBtn.addEventListener('click', () => {
     MOBİL MENÜ MANTIĞI
     ==========================================================================
 */
-// Menü aç/kapat
 mobileMenuBtn.addEventListener('click', () => {
-    navLinks.classList.toggle('active');
+    // .active sınıfını ekle/çıkar yaparak CSS'deki animasyonu tetikle.
+    const isActive = navLinks.classList.toggle('active');
 
-    // İkonu değiştir (Hamburger / Çarpı)
-    if (navLinks.classList.contains('active')) {
-        mobileMenuIcon.classList.remove('fa-bars');
-        mobileMenuIcon.classList.add('fa-xmark');
-        // Sayfa kaydırmayı engelle (Opsiyonel)
-        document.body.style.overflow = 'hidden';
-    } else {
-        mobileMenuIcon.classList.remove('fa-xmark');
-        mobileMenuIcon.classList.add('fa-bars');
-        document.body.style.overflow = 'auto';
-    }
+    // Menü açıldığında X butonu olsun, kapandığında Hamburger (bars) butonu.
+    mobileMenuIcon.classList.toggle('fa-xmark', isActive);
+    mobileMenuIcon.classList.toggle('fa-bars', !isActive);
+
+    // Menü açıkken sayfanın arkada kaymasını engelle.
+    toggleScroll(isActive);
 });
 
-// Linke tıklandığında menüyü kapat
+// Mobil menüdeki linklerden birine tıklandığında menüyü otomatik kapat.
 document.querySelectorAll('.nav-links a').forEach(link => {
     link.addEventListener('click', () => {
         navLinks.classList.remove('active');
-        mobileMenuIcon.classList.remove('fa-xmark');
-        mobileMenuIcon.classList.add('fa-bars');
-        document.body.style.overflow = 'auto';
+        mobileMenuIcon.classList.replace('fa-xmark', 'fa-bars');
+        toggleScroll(false);
     });
 });
 
 /*
     ==========================================================================
-    MODAL MANTIĞI
+    MODAL MANTIĞI (İLETİŞİM PENCERESİ)
     ==========================================================================
 */
-// Modalı Aç
 contactBtn.addEventListener('click', () => {
-    contactModal.classList.add('active');
-    document.body.style.overflow = 'hidden'; // Kaydırmayı engelle
+    contactModal.classList.add('active'); // Modalı görünür yap.
+    toggleScroll(true); // Sayfa kaydırmayı durdur.
 });
 
-// Modalı Kapat (X butonu)
-modalCloseBtn.addEventListener('click', () => {
+// Modalı kapatmak için kullanılan ortak fonksiyon (DRY - Don't Repeat Yourself prensibi).
+const closeModal = () => {
     contactModal.classList.remove('active');
-    document.body.style.overflow = 'auto';
-});
+    toggleScroll(false);
+};
 
-// Modalı Kapat (Dışarı tıklama)
+modalCloseBtn.addEventListener('click', closeModal);
+
+// Kullanıcı modalın dışında (karartılmış alana) tıkladığında kapat.
 window.addEventListener('click', (e) => {
-    if (e.target === contactModal) {
-        contactModal.classList.remove('active');
-        document.body.style.overflow = 'auto';
-    }
+    if (e.target === contactModal) closeModal();
 });
 
-// E-posta Gönder
 modalSendBtn.addEventListener('click', () => {
+    // mailto: linki ile varsayılan e-posta uygulamasını aç.
     window.location.href = 'mailto:onatdibo@proton.me';
-    contactModal.classList.remove('active');
-    document.body.style.overflow = 'auto';
+    closeModal();
 });
 
 // Uygulamayı başlat
