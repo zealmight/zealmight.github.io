@@ -387,15 +387,55 @@ ul {
 
 /* Footer */
 .footer {
-    padding: 20px 0;
+    padding: 40px 0;
     text-align: center;
     border-top: 1px solid var(--border-color);
     color: var(--text-secondary);
     font-size: 0.9rem;
 }
 
-/* 
-    İLETİŞİM MODALI (POPUP) 
+.footer-content {
+    display: flex;
+    flex-direction: row;
+    /* Yan yana hizalama */
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.footer-icon {
+    font-size: 1.1rem;
+    /* Metinle uyumlu boyut */
+    color: var(--accent-color);
+    opacity: 0.35;
+    /* Daha sönük bir görünüm */
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    animation: footerFloat 3s ease-in-out infinite;
+    cursor: default;
+}
+
+.footer-icon:hover {
+    opacity: 0.7;
+    /* Hover durumunda da çok parlamasın */
+    transform: scale(1.1);
+    /* Boyut küçük olduğu için daha az büyüme */
+    filter: drop-shadow(0 0 5px var(--accent-color));
+}
+
+@keyframes footerFloat {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-5px);
+    }
+}
+
+/*
+    İLETİŞİM MODALI (POPUP)
 */
 .modal-overlay {
     position: fixed;
@@ -529,7 +569,7 @@ ul {
     color: #4f46e5;
 }
 
-/* 
+/*
     DUYARLI TASARIM (RESPONSIVE DESIGN)
     @media (max-width: 768px): Ekran genişliği 768px'den küçükse bu kuralları uygula.
 */
