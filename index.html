@@ -16,8 +16,8 @@
         content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data:; connect-src 'self';">
     <!-- XSS Koruması: Tarayıcının XSS filtresini aktif eder -->
     <meta http-equiv="X-XSS-Protection" content="1; mode=block">
-    <!-- Referrer Policy: Dış bağlantılarda gizliliği korur -->
-    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <!-- Referrer Policy: Hiçbir bilgi gönderilmemesi için ayarlandı -->
+    <meta name="referrer" content="no-referrer">
     <!-- Mixed Content: HTTP içeriklerin otomatik HTTPS'e yükseltilmesini sağlar -->
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
 
