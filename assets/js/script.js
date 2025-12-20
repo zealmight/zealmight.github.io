@@ -22,6 +22,8 @@ const translations = {
         contact_title: "İletişim",
         contact_desc: "İletişim kurmak için lütfen eposta gönderin",
         contact_btn: "Bana Ulaşın",
+        modal_text: "onatdibo@proton.me adresine mail gönderilecek",
+        modal_send: "Gönder",
         footer_text: "&copy; 2025 Onat Dibo. Tüm hakları saklıdır."
     },
     en: {
@@ -38,6 +40,8 @@ const translations = {
         contact_title: "Contact",
         contact_desc: "Please send an email to contact me",
         contact_btn: "Contact Me",
+        modal_text: "An email will be sent to onatdibo@proton.me",
+        modal_send: "Send",
         footer_text: "&copy; 2025 Onat Dibo. All rights reserved."
     }
 };
@@ -54,6 +58,12 @@ const themeIcon = themeToggleBtn.querySelector('i'); // Tema butonu içindeki ik
 const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
 const navLinks = document.querySelector('.nav-links');
 const mobileMenuIcon = mobileMenuBtn.querySelector('i');
+
+// -- Modal Elementleri --
+const contactModal = document.getElementById('contact-modal');
+const contactBtn = document.getElementById('contact-btn');
+const modalCloseBtn = document.querySelector('.modal-close');
+const modalSendBtn = document.getElementById('modal-send-btn');
 
 /*
     ==========================================================================
@@ -133,6 +143,8 @@ function updateLanguage(lang) {
     document.querySelector('[data-i18n="contact_title"]').textContent = texts.contact_title;
     document.querySelector('[data-i18n="contact_desc"]').textContent = texts.contact_desc;
     document.querySelector('[data-i18n="contact_btn"]').textContent = texts.contact_btn;
+    document.querySelector('[data-i18n="modal_text"]').textContent = texts.modal_text;
+    document.querySelector('[data-i18n="modal_send"]').textContent = texts.modal_send;
 
     // -- Footer --
     document.querySelector('[data-i18n="footer_text"]').innerHTML = texts.footer_text;
@@ -180,6 +192,38 @@ document.querySelectorAll('.nav-links a').forEach(link => {
         mobileMenuIcon.classList.add('fa-bars');
         document.body.style.overflow = 'auto';
     });
+});
+
+/*
+    ==========================================================================
+    MODAL MANTIĞI
+    ==========================================================================
+*/
+// Modalı Aç
+contactBtn.addEventListener('click', () => {
+    contactModal.classList.add('active');
+    document.body.style.overflow = 'hidden'; // Kaydırmayı engelle
+});
+
+// Modalı Kapat (X butonu)
+modalCloseBtn.addEventListener('click', () => {
+    contactModal.classList.remove('active');
+    document.body.style.overflow = 'auto';
+});
+
+// Modalı Kapat (Dışarı tıklama)
+window.addEventListener('click', (e) => {
+    if (e.target === contactModal) {
+        contactModal.classList.remove('active');
+        document.body.style.overflow = 'auto';
+    }
+});
+
+// E-posta Gönder
+modalSendBtn.addEventListener('click', () => {
+    window.location.href = 'mailto:onatdibo@proton.me';
+    contactModal.classList.remove('active');
+    document.body.style.overflow = 'auto';
 });
 
 // Uygulamayı başlat

@@ -330,7 +330,8 @@ ul {
 .skills-grid {
     display: grid;
     /* Responsive sütunlar: sığabildiği kadar sütun oluştur, min 140px */
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(160px, 160px));
+    justify-content: center;
     gap: 20px;
     max-width: 800px;
     margin: 0 auto;
@@ -399,6 +400,8 @@ ul {
     font-weight: 600;
     font-size: 1.1rem;
     transition: background-color 0.3s, box-shadow 0.3s;
+    border: none;
+    outline: none;
 }
 
 .contact-btn:hover {
@@ -413,6 +416,93 @@ ul {
     border-top: 1px solid var(--border-color);
     color: var(--text-secondary);
     font-size: 0.9rem;
+}
+
+/* 
+   ==========================================================================
+   MODAL STİLLERİ
+   ==========================================================================
+*/
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(8px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-content {
+    background-color: var(--bg-alt);
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: var(--card-shadow);
+    max-width: 400px;
+    width: 90%;
+    position: relative;
+    transform: translateY(20px);
+    transition: transform 0.3s ease;
+    text-align: center;
+    border: 1px solid var(--border-color);
+}
+
+.modal-overlay.active .modal-content {
+    transform: translateY(0);
+}
+
+.modal-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.modal-close:hover {
+    color: var(--accent-color);
+}
+
+.modal-body p {
+    font-size: 1.1rem;
+    color: var(--text-primary);
+    margin-bottom: 25px;
+    font-weight: 500;
+}
+
+.modal-send-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background-color: var(--accent-color);
+    color: white;
+    padding: 12px 30px;
+    border-radius: 50px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.modal-send-btn:hover {
+    background-color: var(--accent-hover);
+    transform: scale(1.05);
 }
 
 /* 
