@@ -24,7 +24,13 @@ const translations = {
         contact_btn: "Bana Ulaşın",
         modal_text: "onatdibo@proton.me adresine mail gönderilecek",
         modal_send: "Gönder",
-        footer_text: "&copy; 2025 Onat Dibo. Tüm hakları saklıdır."
+        footer_text: "&copy; 2025 Onat Dibo. Tüm hakları saklıdır.",
+        slugs: {
+            home: "ana-sayfa",
+            about: "hakkimda",
+            skills: "yetenekler",
+            contact: "iletisim"
+        }
     },
     en: {
         nav_home: "Home",
@@ -42,7 +48,13 @@ const translations = {
         contact_btn: "Contact Me",
         modal_text: "An email will be sent to onatdibo@proton.me",
         modal_send: "Send",
-        footer_text: "&copy; 2025 Onat Dibo. All rights reserved."
+        footer_text: "&copy; 2025 Onat Dibo. All rights reserved.",
+        slugs: {
+            home: "home",
+            about: "about",
+            skills: "skills",
+            contact: "contact"
+        }
     }
 };
 
@@ -154,6 +166,56 @@ function updateLanguage(lang) {
 
     // 4. Belgenin lang özniteliğini güncelle (SEO ve Erişilebilirlik için)
     document.documentElement.lang = lang;
+
+    // 5. Section ID'lerini ve Linkleri Güncelle
+    updateSectionsAndLinks(lang);
+}
+
+/**
+ * Section ID'lerini ve bunlara bağlı linkleri dile göre günceller.
+ */
+function updateSectionsAndLinks(lang) {
+    const slugs = translations[lang].slugs;
+    const oldSlugs = translations[lang === 'tr' ? 'en' : 'tr'].slugs;
+
+    // Eşleme: Orijinal anahtar -> Yeni slug
+    const mapping = {
+        'home': slugs.home,
+        'about': slugs.about,
+        'skills': slugs.skills,
+        'contact': slugs.contact
+    };
+
+    // 1. Bölüm ID'lerini güncelle
+    Object.keys(mapping).forEach(key => {
+        const oldId = oldSlugs[key];
+        const newId = mapping[key];
+        const section = document.getElementById(oldId);
+        if (section) {
+            section.id = newId;
+        }
+    });
+
+    // 2. Navigasyon ve diğer linkleri güncelle
+    document.querySelectorAll('a[href^="#"]').forEach(link => {
+        const href = link.getAttribute('href').substring(1);
+        // Href bir slug ise, hangi anahtara ait olduğunu bul ve yeni slug ile değiştir
+        Object.keys(oldSlugs).forEach(key => {
+            if (oldSlugs[key] === href) {
+                link.setAttribute('href', '#' + mapping[key]);
+            }
+        });
+    });
+
+    // 3. URL hash'ini güncelle (Eğer mevcutsa ve bir slug ise)
+    const currentHash = window.location.hash.substring(1);
+    if (currentHash) {
+        Object.keys(oldSlugs).forEach(key => {
+            if (oldSlugs[key] === currentHash) {
+                history.replaceState(null, null, '#' + mapping[key]);
+            }
+        });
+    }
 }
 
 // Olay Dinleyicisi: TR ve EN arasında geçiş yap
