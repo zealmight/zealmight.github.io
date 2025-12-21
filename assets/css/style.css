@@ -268,7 +268,6 @@ ul {
     margin-bottom: 40px;
     color: var(--text-primary);
     position: relative;
-    display: block;
 }
 
 .section-title::after {
@@ -620,12 +619,11 @@ ul {
 
     /* Mobil menü butonu mobilde görünür olsun */
     .mobile-menu-btn {
-        display: block;
-        width: 40px;
-        height: 40px;
         display: flex;
         align-items: center;
         justify-content: center;
+        width: 40px;
+        height: 40px;
         border-radius: 8px;
         background-color: var(--bg-alt);
         border: 1px solid var(--border-color);
@@ -711,7 +709,6 @@ ul {
 
     /* Küçük ekranlarda skill item'ları daha kompakt */
     .skills-grid {
-        grid-template-columns: repeat(2, 1fr);
         gap: 12px;
     }
 

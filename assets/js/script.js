@@ -5,6 +5,7 @@
  */
 const translations = {
     tr: {
+        page_title: "Hakkımda | Onat Dibo",
         nav_home: "Ana Sayfa",
         nav_about: "Hakkımda",
         nav_skills: "Yetenekler",
@@ -24,6 +25,7 @@ const translations = {
         slugs: { home: "ana-sayfa", about: "hakkimda", skills: "yetenekler", contact: "iletisim" }
     },
     en: {
+        page_title: "About Me | Onat Dibo",
         nav_home: "Home",
         nav_about: "About",
         nav_skills: "Skills",
@@ -122,6 +124,15 @@ function updateLanguage(lang) {
             el.textContent = dict[key];
         }
     });
+
+    // Sayfa başlığını güncelle (title tag)
+    const titleElement = document.querySelector('title[data-i18n]');
+    if (titleElement) {
+        const titleKey = titleElement.getAttribute('data-i18n');
+        if (dict[titleKey]) {
+            titleElement.textContent = dict[titleKey];
+        }
+    }
 
     // URL slug'larını ve navigasyon ID'lerini güncelle
     const otherLang = lang === 'tr' ? 'en' : 'tr';
