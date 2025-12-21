@@ -640,4 +640,31 @@ ul {
     .section {
         padding: 60px 0;
     }
+
+    /* Mobil görünümde skill item'ları 2'şer 2'şer yan yana göster */
+    .skills-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+
+    .skill-item {
+        padding: 15px 10px;
+    }
+
+    .skill-item i {
+        font-size: 2rem;
+    }
+
+    .skill-item span {
+        font-size: 0.9rem;
+    }
+
+    .skill-category-title {
+        font-size: 1rem;
+        margin-top: 30px;
+    }
+
+    .skill-category-title:first-of-type {
+        margin-top: 0;
+    }
 }
