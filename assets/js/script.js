@@ -1,6 +1,6 @@
 /**
  * ==========================================================================
- * PORTFOLIO CONFIGURATION & TRANSLATIONS
+ * PORTFÖY YAPILANDIRMASI & ÇEVİRİLER
  * ==========================================================================
  */
 const translations = {
@@ -46,7 +46,7 @@ const translations = {
 
 /**
  * ==========================================================================
- * STATE & DOM REFERENCES
+ * DURUM & DOM REFERANSLARI
  * ==========================================================================
  */
 const state = {
@@ -69,12 +69,12 @@ const elements = {
 
 /**
  * ==========================================================================
- * CORE FUNCTIONS
+ * TEMEL FONKSİYONLAR
  * ==========================================================================
  */
 
 /**
- * Initializes the application state and UI
+ * Uygulamanın durumunu ve arayüzünü başlatır
  */
 function init() {
     applyTheme(state.theme);
@@ -82,15 +82,15 @@ function init() {
 }
 
 /**
- * Controls body scroll behavior (used by Modal/Mobile Menu)
- * @param {boolean} isLocked 
+ * Sayfa kaydırma davranışını kontrol eder (Modal/Mobil Menü tarafından kullanılır)
+ * @param {boolean} isLocked - Kaydırma kilitli mi?
  */
 const toggleScroll = (isLocked) => {
     document.body.style.overflow = isLocked ? 'hidden' : 'auto';
 };
 
 /**
- * Handles Dark/Light mode switching
+ * Koyu/Açık mod geçişini yönetir
  * @param {string} theme - 'dark' | 'light'
  */
 function applyTheme(theme) {
@@ -102,7 +102,7 @@ function applyTheme(theme) {
 }
 
 /**
- * Updates UI translations and URL slugs
+ * Arayüz çevirilerini ve URL slug'larını günceller
  * @param {string} lang - 'tr' | 'en'
  */
 function updateLanguage(lang) {
@@ -110,12 +110,12 @@ function updateLanguage(lang) {
     state.lang = lang;
     localStorage.setItem('lang', lang);
 
-    // Update translated elements
+    // Çevrilmiş elementleri güncelle
     document.querySelectorAll('[data-i18n]').forEach(el => {
         const key = el.getAttribute('data-i18n');
         if (!dict[key]) return;
 
-        // Use innerHTML for keys that might contain icons/special formatting
+        // İkonlar/özel biçimlendirme içerebilecek anahtarlar için innerHTML kullan
         if (key === 'footer_text') {
             el.innerHTML = dict[key];
         } else {
@@ -123,7 +123,7 @@ function updateLanguage(lang) {
         }
     });
 
-    // Update URL slugs and navigation IDs
+    // URL slug'larını ve navigasyon ID'lerini güncelle
     const otherLang = lang === 'tr' ? 'en' : 'tr';
     const oldSlugs = translations[otherLang].slugs;
     const newSlugs = dict.slugs;
@@ -137,42 +137,42 @@ function updateLanguage(lang) {
         });
     });
 
-    // Update active URL hash
+    // Aktif URL hash'ini güncelle
     const currentHash = window.location.hash.substring(1);
     const activeSlugKey = Object.keys(oldSlugs).find(k => oldSlugs[k] === currentHash);
     if (activeSlugKey) {
         history.replaceState(null, null, `#${newSlugs[activeSlugKey]}`);
     }
 
-    // Update interface elements
+    // Arayüz elementlerini güncelle
     elements.langBtn.textContent = lang === 'tr' ? 'EN' : 'TR';
     document.documentElement.lang = lang;
 }
 
 /**
  * ==========================================================================
- * EVENT LISTENERS
+ * OLAY DİNLEYİCİLERİ (EVENT LISTENERS)
  * ==========================================================================
  */
 
-// Theme Toggle
+// Tema Değiştirme
 elements.themeBtn.addEventListener('click', () => {
     applyTheme(state.theme === 'light' ? 'dark' : 'light');
 });
 
-// Language Toggle
+// Dil Değiştirme
 elements.langBtn.addEventListener('click', () => {
     updateLanguage(state.lang === 'tr' ? 'en' : 'tr');
 });
 
-// Mobile Menu Logic
+// Mobil Menü Mantığı
 elements.mobileMenuBtn.addEventListener('click', () => {
     const isActive = elements.navLinks.classList.toggle('active');
     elements.mobileMenuIcon.className = isActive ? 'fas fa-xmark' : 'fas fa-bars';
     toggleScroll(isActive);
 });
 
-// Close Mobile Menu on Click
+// Tıklamada Mobil Menüyü Kapat
 document.querySelectorAll('.nav-links a').forEach(link => {
     link.addEventListener('click', () => {
         elements.navLinks.classList.remove('active');
@@ -181,7 +181,7 @@ document.querySelectorAll('.nav-links a').forEach(link => {
     });
 });
 
-// Modal Logic
+// Modal Mantığı
 const toggleModal = (show) => {
     elements.contactModal.classList.toggle('active', show);
     toggleScroll(show);
@@ -194,10 +194,11 @@ elements.modalSendBtn.addEventListener('click', () => {
     toggleModal(false);
 });
 
-// Close modal on outside click
+// Dışarı tıklamada modalı kapat
 window.addEventListener('click', (e) => {
     if (e.target === elements.contactModal) toggleModal(false);
 });
 
-// Bootstrap logic
+// Başlatma mantığı
 document.addEventListener('DOMContentLoaded', init);
+
