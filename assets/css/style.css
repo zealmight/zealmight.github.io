@@ -573,6 +573,8 @@ ul {
     DUYARLI TASARIM (RESPONSIVE DESIGN)
     @media (max-width: 768px): Ekran genişliği 768px'den küçükse bu kuralları uygula.
 */
+
+/* Tablet ve orta boyutlu mobil cihazlar (768px ve altı) */
 @media (max-width: 768px) {
     .nav-links {
         display: flex;
@@ -645,6 +647,7 @@ ul {
     .skills-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 15px;
+        max-width: 100%;
     }
 
     .skill-item {
@@ -660,11 +663,96 @@ ul {
     }
 
     .skill-category-title {
-        font-size: 1rem;
+        font-size: 1.1rem;
         margin-top: 30px;
     }
 
     .skill-category-title:first-of-type {
         margin-top: 0;
+    }
+}
+
+/* Küçük mobil cihazlar (480px ve altı) */
+@media (max-width: 480px) {
+    .container {
+        padding: 0 15px;
+    }
+
+    .logo {
+        font-size: 1.3rem;
+    }
+
+    .hero-image img {
+        width: 130px;
+        height: 130px;
+    }
+
+    #name {
+        font-size: 1.8rem;
+    }
+
+    .subtitle {
+        font-size: 1rem;
+    }
+
+    .social-links a {
+        width: 45px;
+        height: 45px;
+        font-size: 1.2rem;
+    }
+
+    .section-title {
+        font-size: 1.5rem;
+    }
+
+    .section {
+        padding: 50px 0;
+    }
+
+    /* Küçük ekranlarda skill item'ları daha kompakt */
+    .skills-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+
+    .skill-item {
+        padding: 12px 8px;
+    }
+
+    .skill-item i {
+        font-size: 1.8rem;
+        margin-bottom: 8px;
+    }
+
+    .skill-item span {
+        font-size: 0.85rem;
+    }
+
+    .skill-category-title {
+        font-size: 1rem;
+    }
+
+    .contact-btn {
+        padding: 12px 30px;
+        font-size: 1rem;
+    }
+}
+
+/* Çok küçük mobil cihazlar (360px ve altı) */
+@media (max-width: 360px) {
+    .skills-grid {
+        gap: 10px;
+    }
+
+    .skill-item {
+        padding: 10px 6px;
+    }
+
+    .skill-item i {
+        font-size: 1.6rem;
+    }
+
+    .skill-item span {
+        font-size: 0.8rem;
     }
 }
