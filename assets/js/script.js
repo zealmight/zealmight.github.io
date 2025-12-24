@@ -212,4 +212,3 @@ window.addEventListener('click', (e) => {
 
 // Başlatma mantığı
 document.addEventListener('DOMContentLoaded', init);
-
