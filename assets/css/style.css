@@ -277,14 +277,6 @@ ul {
     line-height: 1;
 }
 
-/* Mobil Menüde Dropdown Ayarları */
-@media (max-width: 768px) {
-    .lang-menu {
-        position: absolute;
-        bottom: calc(100% + 10px);
-        top: auto;
-    }
-}
 
 /* 
     HERO SECTION (GİRİŞ BÖLÜMÜ) 
