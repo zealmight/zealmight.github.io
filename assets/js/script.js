@@ -58,7 +58,11 @@ const state = {
 
 const elements = {
     themeBtn: document.getElementById('theme-toggle'),
-    langBtn: document.getElementById('lang-toggle'),
+    langBtn: document.getElementById('lang-btn'),
+    langDropdown: document.querySelector('.lang-dropdown'),
+    langMenu: document.querySelector('.lang-menu'),
+    langText: document.querySelector('.current-lang-text'),
+    langOptions: document.querySelectorAll('.lang-option'),
     themeIcon: document.querySelector('#theme-toggle i'),
     mobileMenuBtn: document.querySelector('.mobile-menu-btn'),
     mobileMenuIcon: document.querySelector('.mobile-menu-btn i'),
@@ -148,15 +152,10 @@ function updateLanguage(lang) {
         });
     });
 
-    // Aktif URL hash'ini güncelle
-    const currentHash = window.location.hash.substring(1);
-    const activeSlugKey = Object.keys(oldSlugs).find(k => oldSlugs[k] === currentHash);
-    if (activeSlugKey) {
-        history.replaceState(null, null, `#${newSlugs[activeSlugKey]}`);
-    }
-
     // Arayüz elementlerini güncelle
-    elements.langBtn.textContent = lang === 'tr' ? 'EN' : 'TR';
+    if (elements.langText) {
+        elements.langText.textContent = lang.toUpperCase();
+    }
     document.documentElement.lang = lang;
 }
 
@@ -171,9 +170,24 @@ elements.themeBtn.addEventListener('click', () => {
     applyTheme(state.theme === 'light' ? 'dark' : 'light');
 });
 
-// Dil Değiştirme
-elements.langBtn.addEventListener('click', () => {
-    updateLanguage(state.lang === 'tr' ? 'en' : 'tr');
+// Dil Seçimi Dropdown Toggle
+elements.langBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const isActive = elements.langMenu.classList.toggle('active');
+    elements.langDropdown.classList.toggle('active', isActive);
+});
+
+// Dil Seçimi (Seçenek Tıklama)
+elements.langOptions.forEach(option => {
+    option.addEventListener('click', () => {
+        const selectedLang = option.getAttribute('data-lang');
+        if (selectedLang !== state.lang) {
+            updateLanguage(selectedLang);
+        }
+        // Seçim sonrası kapat
+        elements.langMenu.classList.remove('active');
+        elements.langDropdown.classList.remove('active');
+    });
 });
 
 // Mobil Menü Mantığı
@@ -183,12 +197,26 @@ elements.mobileMenuBtn.addEventListener('click', () => {
     toggleScroll(isActive);
 });
 
-// Tıklamada Mobil Menüyü Kapat
+// Tıklamada Mobil Menüyü Kapat ve Hash Güncellemesini Engelle
 document.querySelectorAll('.nav-links a').forEach(link => {
-    link.addEventListener('click', () => {
-        elements.navLinks.classList.remove('active');
-        elements.mobileMenuIcon.className = 'fas fa-bars';
-        toggleScroll(false);
+    link.addEventListener('click', (e) => {
+        // Hash'in URL'de görünmesini engelle
+        e.preventDefault();
+
+        const targetId = link.getAttribute('href').substring(1);
+        const targetSection = document.getElementById(targetId);
+
+        if (targetSection) {
+            // Yumuşak kaydırma
+            targetSection.scrollIntoView({
+                behavior: 'smooth'
+            });
+
+            // Mobil menüyü kapat
+            elements.navLinks.classList.remove('active');
+            elements.mobileMenuIcon.className = 'fas fa-bars';
+            toggleScroll(false);
+        }
     });
 });
 
@@ -205,9 +233,15 @@ elements.modalSendBtn.addEventListener('click', () => {
     toggleModal(false);
 });
 
-// Dışarı tıklamada modalı kapat
+// Dışarı tıklamada modalı veya dropdown'ı kapat
 window.addEventListener('click', (e) => {
     if (e.target === elements.contactModal) toggleModal(false);
+
+    // Dropdown dışında bir yere tıklandığında dropdown'ı kapat
+    if (!elements.langDropdown.contains(e.target)) {
+        elements.langMenu.classList.remove('active');
+        elements.langDropdown.classList.remove('active');
+    }
 });
 
 // Başlatma mantığı

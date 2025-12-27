@@ -69,7 +69,20 @@
                 <button id="theme-toggle" class="icon-btn" aria-label="Temayı Değiştir">
                     <i class="fas fa-moon"></i>
                 </button>
-                <button id="lang-toggle" class="text-btn" aria-label="Dili Değiştir">EN</button>
+                <div class="lang-dropdown">
+                    <button id="lang-btn" class="text-btn" aria-label="Dili Değiştir">
+                        <span class="current-lang-text">TR</span>
+                        <i class="fas fa-chevron-down dropdown-arrow"></i>
+                    </button>
+                    <div class="lang-menu">
+                        <button class="lang-option" data-lang="tr">
+                            <span class="flag">🇹🇷</span> Turkish
+                        </button>
+                        <button class="lang-option" data-lang="en">
+                            <span class="flag">🇺🇸</span> English
+                        </button>
+                    </div>
+                </div>
                 <!-- Mobil menü butonu (Sadece küçük ekranlarda CSS ile görünür olur) -->
                 <button class="mobile-menu-btn" aria-label="Menü">
                     <i class="fas fa-bars"></i>
