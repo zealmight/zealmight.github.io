@@ -1,6 +1,6 @@
 # Kullanım Şartları
 
-Bu web sitesine ( [SİTE_URL_ADRESİNİZ] ) erişerek ve bu siteyi kullanarak, aşağıdaki şartları kabul etmiş sayılırsınız.
+Bu web sitesine ( [https://onatdibo.com] ) erişerek ve bu siteyi kullanarak, aşağıdaki şartları kabul etmiş sayılırsınız.
 
 ## 1. Mülkiyet Hakları
 Bu sitede yer alan tüm içerikler (yazılar, kod örnekleri, tasarımlar ve görseller), aksi belirtilmedikçe **[ADINIZ SOYADINIZ]** tarafına aittir. İzinsiz kopyalanması veya ticari amaçla kullanılması yasaktır.
