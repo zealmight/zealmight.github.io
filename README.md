@@ -18,4 +18,4 @@ Eğer bu depo (repository) içinde paylaşılan kaynak kodları kullanmak isters
 Yazar, bu kullanım şartlarını dilediği zaman önceden haber vermeksizin güncelleme hakkını saklı tutar.
 
 ---
-**Son Güncelleme:** [27.12.2025]
+**Son Güncelleme:** [27/12/2025]
