@@ -19,3 +19,30 @@ Yazar, bu kullanım şartlarını dilediği zaman önceden haber vermeksizin gü
 
 ---
 **Son Güncelleme:** [27/12/2025]
+
+<hr>
+
+# Terms of Use
+
+By accessing and using this website ( [https://onatdibo.com] ), you agree to the following terms.
+
+## 1. Ownership Rights
+All content on this site (articles, code samples, designs, and images) belongs to **[YOUR NAME]** unless otherwise stated. Unauthorized copying or commercial use is prohibited.
+
+## 2. Purpose of Use
+This site is created for general information and portfolio presentation purposes. The author cannot be held responsible for any errors arising from the use of the information or code snippets shared on the site.
+
+## 3. Disclaimer
+The content on this website is provided “as is.” No guarantee is made regarding the accuracy, completeness, or timeliness of the content. The author is not responsible for the content of third-party sites accessed through links on this site.
+
+## 4. License (For Code)
+If you wish to use the source code shared in this repository, please refer to the [LICENSE.md](LICENSE.md) file. Unless otherwise specified, the code is for personal use only.
+
+## 5. Changes
+The author reserves the right to update these terms of use at any time without prior notice.
+
+---
+**Last Updated:** [12/27/2025]
+
+
+Translated with DeepL.com (free version)
