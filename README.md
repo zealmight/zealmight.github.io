@@ -43,6 +43,3 @@ The author reserves the right to update these terms of use at any time without p
 
 ---
 **Last Updated:** [12/27/2025]
-
-
-Translated with DeepL.com (free version)
