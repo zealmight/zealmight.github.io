@@ -23,6 +23,8 @@ const translations = {
         modal_send: "Gönder",
         modal_success: "Kopyalandı!",
         footer_text: "2025 Onat Dibo. Tüm hakları saklıdır.",
+        console_header: "■ SİBER ÇEKİRDEK BAŞLATILDI",
+        console_message: "Sistem Aktif... Siber dünyaya hoş geldin! 🚀\nSızmaya çalışma, sadece portfolyomu inceliyorsun. 😉",
         slugs: { home: "ana-sayfa", about: "hakkimda", skills: "yetenekler", contact: "iletisim" }
     },
     en: {
@@ -44,6 +46,8 @@ const translations = {
         modal_send: "Send",
         modal_success: "Copied!",
         footer_text: "2025 Onat Dibo. All rights reserved.",
+        console_header: "■ CYBER CORE INITIALIZED",
+        console_message: "System Active... Welcome to the cyber world! 🚀\nNo need to hack, you are just viewing my portfolio. 😉",
         slugs: { home: "home", about: "about", skills: "skills", contact: "contact" }
     }
 };
@@ -160,6 +164,31 @@ function updateLanguage(lang) {
         elements.langText.textContent = lang.toUpperCase();
     }
     document.documentElement.lang = lang;
+    logCyberMessage(lang);
+}
+
+/**
+ * Konsola siber temalı, şekilli bir mesaj yazdırır
+ * @param {string} lang - 'tr' | 'en'
+ */
+function logCyberMessage(lang) {
+    const dict = translations[lang];
+    const msg = dict.console_message;
+
+    const banner = `
+    > ONAT DIBO :: PORTFOLIO 2.0
+    > STATUS: SYSTEM_READY
+    > ENCRYPTION: ACTIVE
+    `;
+
+    const titleStyle = 'color: #10b981; font-family: monospace; font-size: 20px; font-weight: bold; text-shadow: 0 0 10px #10b981;';
+    const bannerStyle = 'color: #334155; font-family: monospace; font-size: 14px; line-height: 1.5;';
+    const msgStyle = 'background: #020617; color: #10b981; padding: 12px 20px; border-left: 4px solid #10b981; font-family: monospace; font-size: 14px; font-weight: bold; line-height: 1.6;';
+
+    console.clear();
+    console.log("%c" + dict.console_header, titleStyle);
+    console.log("%c" + banner, bannerStyle);
+    console.log("%c" + msg, msgStyle);
 }
 
 /**

@@ -18,7 +18,8 @@
     --border-color: rgba(13, 148, 136, 0.25);
     --nav-bg: rgba(248, 250, 252, 0.9);
     --card-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
-    --glow-color: rgba(13, 148, 136, 0.2);
+    --glow-color: rgba(13, 148, 136, 0.08);
+    /* Much subtler for light mode */
     --glass-bg: rgba(255, 255, 255, 0.65);
     --glass-border: rgba(255, 255, 255, 0.4);
 
@@ -27,6 +28,9 @@
     --brand-linkedin: #0a66c2;
     --brand-medium: #000000;
     --brand-tryhackme: #16a34a;
+
+    /* Overlay fix for Light Mode */
+    --overlay-bg: rgba(255, 255, 255, 0.6);
 }
 
 [data-theme="dark"] {
@@ -48,6 +52,9 @@
     --brand-github: #f1f5f9;
     --brand-medium: #f1f5f9;
     --brand-tryhackme: #10b981;
+
+    /* Overlay fix for Dark Mode */
+    --overlay-bg: rgba(0, 0, 0, 0.75);
 }
 
 /* 
@@ -248,6 +255,12 @@ ul {
     /* Soft glow background */
     color: var(--accent-color);
     box-shadow: 0 0 12px var(--glow-color);
+}
+
+#lang-btn:active,
+#lang-btn:focus {
+    background: rgba(16, 185, 129, 0.25);
+    outline: none;
 }
 
 .dropdown-arrow {
@@ -599,6 +612,12 @@ ul {
     border-color: var(--accent-color);
 }
 
+.contact-btn:active,
+.contact-btn:focus {
+    background: rgba(16, 185, 129, 0.3);
+    outline: none;
+}
+
 /* Alt Bilgi (Footer) */
 .footer {
     padding: 40px 0;
@@ -657,9 +676,9 @@ ul {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.75);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    background-color: var(--overlay-bg);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -731,17 +750,24 @@ ul {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 15px;
+    /* Centered content */
+    gap: 10px;
     background-color: var(--bg-body);
-    padding: 12px 20px;
+    padding: 12px 15px;
     border-radius: 12px;
     margin-bottom: 25px;
     border: 1px solid var(--border-color);
+    width: 100%;
+    /* Ensure it takes full container width */
 }
 
 .email-wrapper p {
     margin-bottom: 0;
     font-family: monospace;
+    font-size: 0.95rem;
+    /* Slightly smaller for better fit */
+    word-break: break-all;
+    text-align: center;
 }
 
 .copy-btn {
@@ -845,11 +871,9 @@ ul {
     .nav-links {
         display: flex;
         flex-direction: column;
-        /* Linkleri alt alta diz */
         position: fixed;
         top: 60px;
         left: -100%;
-        /* Başlangıçta ekranın solunda gizli */
         width: 100%;
         height: calc(100vh - 60px);
         background-color: var(--nav-bg);
@@ -863,7 +887,6 @@ ul {
         text-align: center;
     }
 
-    /* Menü aktif olduğunda ekrana getir */
     .nav-links.active {
         left: 0;
     }
@@ -884,7 +907,6 @@ ul {
         bottom: 10px;
     }
 
-    /* Mobil menü butonu mobilde görünür olsun */
     .mobile-menu-btn {
         display: flex;
         align-items: center;
@@ -908,7 +930,6 @@ ul {
         padding: 60px 0;
     }
 
-    /* Mobil görünümde skill item'ları 2'şer 2'şer yan yana göster */
     .skills-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 15px;
@@ -919,12 +940,32 @@ ul {
         padding: 15px 10px;
     }
 
-    .skill-item i {
-        font-size: 2rem;
-    }
+    /* Çok küçük ekranlar için ince ayarlar */
+    @media (max-width: 480px) {
+        .skills-grid {
+            gap: 10px;
+        }
 
-    .skill-item span {
-        font-size: 0.9rem;
+        .skill-item {
+            padding: 12px 6px;
+        }
+
+        .skill-item i {
+            font-size: 1.8rem;
+        }
+
+        .skill-item span {
+            font-size: 0.8rem;
+        }
+
+        .hero-image img {
+            width: 130px;
+            height: 130px;
+        }
+
+        #name {
+            font-size: 1.8rem;
+        }
     }
 
     .skill-category-title {
@@ -935,88 +976,42 @@ ul {
     .skill-category-title:first-of-type {
         margin-top: 0;
     }
-}
 
-/* Küçük mobil cihazlar (480px ve altı) */
-@media (max-width: 480px) {
-    .container {
-        padding: 0 15px;
+    /* Performans Optimizasyonları (Mobilde ağır efektleri kapatıyoruz) */
+    .navbar,
+    .skill-item,
+    .lang-menu,
+    .modal-content,
+    .card {
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
     }
 
-    .logo {
-        font-size: 1.3rem;
-    }
-
-    .hero-image img {
-        width: 130px;
-        height: 130px;
-    }
-
-    #name {
-        font-size: 1.8rem;
-    }
-
-    .subtitle {
-        font-size: 1rem;
-    }
-
-    .social-links a {
-        width: 45px;
-        height: 45px;
-        font-size: 1.2rem;
-    }
-
-    .section-title {
-        font-size: 1.5rem;
-    }
-
-    .section {
-        padding: 50px 0;
-    }
-
-    /* Küçük ekranlarda skill item'ları daha kompakt */
-    .skills-grid {
-        gap: 12px;
+    .navbar {
+        background-color: var(--nav-bg) !important;
+        opacity: 0.98;
     }
 
     .skill-item {
-        padding: 12px 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
     }
 
-    .skill-item i {
-        font-size: 1.8rem;
-        margin-bottom: 8px;
+    .modal-content {
+        padding: 25px 15px;
     }
 
-    .skill-item span {
-        font-size: 0.85rem;
+    .email-wrapper {
+        padding: 10px;
+        gap: 5px;
+        justify-content: center;
     }
 
-    .skill-category-title {
-        font-size: 1rem;
-    }
-
-    .contact-btn {
-        padding: 12px 30px;
-        font-size: 1rem;
-    }
-}
-
-/* Çok küçük mobil cihazlar (360px ve altı) */
-@media (max-width: 360px) {
-    .skills-grid {
-        gap: 10px;
-    }
-
-    .skill-item {
-        padding: 10px 6px;
-    }
-
-    .skill-item i {
-        font-size: 1.6rem;
-    }
-
-    .skill-item span {
+    .email-wrapper p {
         font-size: 0.8rem;
+    }
+
+    * {
+        text-shadow: none !important;
+        -webkit-tap-highlight-color: transparent;
     }
 }
