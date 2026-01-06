@@ -85,12 +85,18 @@ body::after {
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.05) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.01), rgba(0, 255, 0, 0.005), rgba(0, 0, 255, 0.01));
-    background-size: 100% 4px, 3px 100%;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.03) 50%);
+    background-size: 100% 4px;
     pointer-events: none;
     z-index: 9999;
-    opacity: 0.08;
-    /* Toned down scanlines */
+    opacity: 0.06;
+}
+
+@media (max-width: 768px) {
+    body::after {
+        display: none;
+        /* Disable heavy scanlines on mobile */
+    }
 }
 
 a {
@@ -124,12 +130,13 @@ ul {
     top: 0;
     width: 100%;
     background-color: var(--nav-bg);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     border-bottom: 1px solid var(--border-color);
     z-index: 1000;
     padding: 0.8rem 0;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    will-change: backdrop-filter;
 }
 
 .nav-container {
@@ -376,6 +383,11 @@ ul {
     }
 }
 
+.status-indicator,
+.status-indicator::after {
+    will-change: transform, opacity;
+}
+
 #name {
     font-size: 2.5rem;
     margin-top: 15px;
@@ -491,6 +503,7 @@ ul {
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
+    will-change: transform, box-shadow;
 }
 
 .skill-item::before {
@@ -606,13 +619,12 @@ ul {
 
 .footer-icon {
     font-size: 1.1rem;
-    /* Metinle uyumlu boyut */
     color: var(--accent-color);
     opacity: 0.35;
-    /* Daha sönük bir görünüm */
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     animation: footerFloat 3s ease-in-out infinite;
     cursor: default;
+    will-change: transform, opacity;
 }
 
 .footer-icon:hover {
@@ -645,9 +657,9 @@ ul {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
+    background-color: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -655,6 +667,7 @@ ul {
     opacity: 0;
     visibility: hidden;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: opacity, visibility;
 }
 
 /* Modalı görünür yapan sınıf */
@@ -665,18 +678,19 @@ ul {
 
 .modal-content {
     background: var(--glass-bg);
-    backdrop-filter: blur(25px);
-    -webkit-backdrop-filter: blur(25px);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
     padding: 40px;
     border-radius: 20px;
-    box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 10px 50px rgba(0, 0, 0, 0.5);
     max-width: 420px;
     width: 90%;
     position: relative;
-    transform: scale(0.9) translateY(20px);
+    transform: scale(0.95) translateY(20px);
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     text-align: center;
     border: 1px solid var(--accent-color);
+    will-change: transform, opacity;
 }
 
 .modal-overlay.active .modal-content {
