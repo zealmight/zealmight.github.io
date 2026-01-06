@@ -21,6 +21,7 @@ const translations = {
         contact_btn: "Bana Ulaşın",
         modal_text: "onatdibo@proton.me adresine mail gönderilecek",
         modal_send: "Gönder",
+        modal_success: "Kopyalandı!",
         footer_text: "2025 Onat Dibo. Tüm hakları saklıdır.",
         slugs: { home: "ana-sayfa", about: "hakkimda", skills: "yetenekler", contact: "iletisim" }
     },
@@ -41,6 +42,7 @@ const translations = {
         contact_btn: "Contact Me",
         modal_text: "An email will be sent to onatdibo@proton.me",
         modal_send: "Send",
+        modal_success: "Copied!",
         footer_text: "2025 Onat Dibo. All rights reserved.",
         slugs: { home: "home", about: "about", skills: "skills", contact: "contact" }
     }
@@ -70,7 +72,8 @@ const elements = {
     contactModal: document.getElementById('contact-modal'),
     contactBtn: document.getElementById('contact-btn'),
     modalCloseBtn: document.querySelector('.modal-close'),
-    modalSendBtn: document.getElementById('modal-send-btn')
+    modalSendBtn: document.getElementById('modal-send-btn'),
+    copyEmailBtn: document.getElementById('copy-email-btn')
 };
 
 /**
@@ -228,6 +231,28 @@ const toggleModal = (show) => {
 
 elements.contactBtn.addEventListener('click', () => toggleModal(true));
 elements.modalCloseBtn.addEventListener('click', () => toggleModal(false));
+
+// E-posta Kopyalama
+elements.copyEmailBtn.addEventListener('click', async () => {
+    const email = 'onatdibo@proton.me';
+    const icon = elements.copyEmailBtn.querySelector('i');
+
+    try {
+        await navigator.clipboard.writeText(email);
+
+        // Başarı ikonu göster
+        icon.className = 'fas fa-check';
+
+        // 2 saniye sonra geri döndür
+        setTimeout(() => {
+            icon.className = 'far fa-copy';
+        }, 2000);
+    } catch (err) {
+        console.error('Kopyalama başarısız:', err);
+    }
+});
+
+// E-postaya Yönlendirme
 elements.modalSendBtn.addEventListener('click', () => {
     window.location.href = 'mailto:onatdibo@proton.me';
     toggleModal(false);

@@ -99,6 +99,7 @@
         <div class="container hero-container">
             <div class="hero-image">
                 <img src="/assets/img/logo.jpeg" alt="Profil Resmi">
+                <div class="status-indicator" title="Sistem Aktif"></div>
             </div>
             <div class="hero-content">
                 <h1 id="name">Onat Dibo</h1>
@@ -210,7 +211,12 @@
         <div class="modal-content">
             <button class="modal-close" aria-label="Kapat">&times;</button>
             <div class="modal-body">
-                <p data-i18n="modal_text">onatdibo@proton.me adresine mail gönderilecek</p>
+                <div class="email-wrapper">
+                    <p id="modal-email">onatdibo@proton.me</p>
+                    <button id="copy-email-btn" class="copy-btn" title="Kopyala" aria-label="E-postayı kopyala">
+                        <i class="far fa-copy"></i>
+                    </button>
+                </div>
                 <button id="modal-send-btn" class="modal-send-btn">
                     <i class="fas fa-envelope"></i>
                     <span data-i18n="modal_send">Gönder</span>
