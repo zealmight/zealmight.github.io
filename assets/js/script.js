@@ -14,8 +14,10 @@ const translations = {
         about_title: "👤 Hakkımda",
         about_desc: "Bilgisayar Teknolojileri mezunu, Cisco onaylı Siber Güvenlik sertifikasına sahip. Sürekli öğrenme motivasyonu yüksek, sektördeki gelişmeleri yakından takip eden ve yenilikçi çözümler üretmeye odaklanan bir teknoloji profesyoneli.",
         skills_title: "🛠️ Yetenekler",
-        skills_cat_security: "Siber Güvenlik & Sistem",
-        skills_cat_web: "Web Teknolojileri",
+        skills_cat_security: "Programlama",
+        skills_cat_web: "Web Geliştirme",
+        skills_cat_tools: "Araçlar",
+        skills_cat_version: "Versiyon Kontrol",
         contact_title: "📬 İletişim",
         contact_desc: "İletişim kurmak için lütfen eposta gönderin",
         contact_btn: "Bana Ulaşın",
@@ -40,8 +42,10 @@ const translations = {
         about_title: "👤 About Me",
         about_desc: "Computer Technologies graduate with a Cisco-approved Cyber Security certificate. A technology professional with high motivation for continuous learning, closely following industry developments, and focused on creating innovative solutions.",
         skills_title: "🛠️ Skills",
-        skills_cat_security: "Cyber Security & System",
-        skills_cat_web: "Web Technologies",
+        skills_cat_security: "Programming",
+        skills_cat_web: "Web Development",
+        skills_cat_tools: "Tools",
+        skills_cat_version: "Version Control",
         contact_title: "📬 Contact",
         contact_desc: "Please send an email to contact me",
         contact_btn: "Contact Me",
@@ -141,8 +145,8 @@ function updateLanguage(lang) {
         const key = el.getAttribute('data-i18n');
         if (!dict[key]) return;
 
-        // İkonlar/özel biçimlendirme içerebilecek anahtarlar için innerHTML kullan
-        const useHTML = ['footer_text', 'about_title', 'skills_title', 'contact_title', 'nav_home', 'nav_about', 'nav_skills', 'nav_contact'];
+        // İkonlar/özel biçimlendirme içerebilecek anahtarlar için innerHTML kullanırken dikkatli olun
+        const useHTML = ['footer_text', 'about_title', 'skills_title', 'contact_title'];
 
         if (useHTML.includes(key)) {
             el.innerHTML = dict[key];

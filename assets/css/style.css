@@ -495,11 +495,12 @@ ul {
 */
 .skills-grid {
     display: grid;
-    /* Compact size: minimum 130px, maximum 150px */
-    grid-template-columns: repeat(auto-fit, minmax(130px, 150px));
+    /* Limit to max 3 columns by controlling max-width and min-width */
+    grid-template-columns: repeat(auto-fit, minmax(130px, 180px));
     justify-content: center;
     gap: 15px;
-    max-width: 900px;
+    max-width: 600px;
+    /* Reduced from 800px to force 3 columns */
     margin: 0 auto;
 }
 
@@ -859,6 +860,18 @@ ul {
 
 .text-indigo-600 {
     color: #4f46e5;
+}
+
+.text-purple-600 {
+    color: #9333ea;
+}
+
+.text-sky-500 {
+    color: #0ea5e9;
+}
+
+.text-orange-600 {
+    color: #ea580c;
 }
 
 /*
