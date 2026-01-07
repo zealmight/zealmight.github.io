@@ -23,6 +23,9 @@ const translations = {
         modal_send: "Gönder",
         modal_success: "Kopyalandı!",
         footer_text: "2025 Onat Dibo. Tüm hakları saklıdır.",
+        lang_prompt_text: "İçeriği Türkçe olarak görmek ister misiniz?",
+        lang_prompt_yes: "Evet, Değiştir",
+        lang_prompt_no: "Kapat",
         console_header: "■ SİBER ÇEKİRDEK BAŞLATILDI",
         console_message: "Sistem Aktif... Siber dünyaya hoş geldin! 🚀\nSızmaya çalışma, sadece portfolyomu inceliyorsun. 😉",
         slugs: { home: "ana-sayfa", about: "hakkimda", skills: "yetenekler", contact: "iletisim" }
@@ -46,6 +49,9 @@ const translations = {
         modal_send: "Send",
         modal_success: "Copied!",
         footer_text: "2025 Onat Dibo. All rights reserved.",
+        lang_prompt_text: "Would you like to view the content in English?",
+        lang_prompt_yes: "Yes, Switch",
+        lang_prompt_no: "Close",
         console_header: "■ CYBER CORE INITIALIZED",
         console_message: "System Active... Welcome to the cyber world! 🚀\nNo need to hack, you are just viewing my portfolio. 😉",
         slugs: { home: "home", about: "about", skills: "skills", contact: "contact" }
@@ -77,7 +83,11 @@ const elements = {
     contactBtn: document.getElementById('contact-btn'),
     modalCloseBtn: document.querySelector('.modal-close'),
     modalSendBtn: document.getElementById('modal-send-btn'),
-    copyEmailBtn: document.getElementById('copy-email-btn')
+    copyEmailBtn: document.getElementById('copy-email-btn'),
+    langPrompt: document.getElementById('lang-prompt'),
+    langPromptYes: document.getElementById('lang-prompt-yes'),
+    langPromptNo: document.getElementById('lang-prompt-no'),
+    langPromptText: document.getElementById('lang-prompt-text')
 };
 
 /**
@@ -92,6 +102,9 @@ const elements = {
 function init() {
     applyTheme(state.theme);
     updateLanguage(state.lang);
+
+    // Tarayıcı dilini kontrol et (Gecikmeli çalıştır ki sayfa yüklensin)
+    setTimeout(checkBrowserLanguage, 1500);
 }
 
 /**
@@ -129,7 +142,9 @@ function updateLanguage(lang) {
         if (!dict[key]) return;
 
         // İkonlar/özel biçimlendirme içerebilecek anahtarlar için innerHTML kullan
-        if (key === 'footer_text') {
+        const useHTML = ['footer_text', 'about_title', 'skills_title', 'contact_title', 'nav_home', 'nav_about', 'nav_skills', 'nav_contact'];
+
+        if (useHTML.includes(key)) {
             el.innerHTML = dict[key];
         } else {
             el.textContent = dict[key];
@@ -165,6 +180,70 @@ function updateLanguage(lang) {
     }
     document.documentElement.lang = lang;
     logCyberMessage(lang);
+
+    // Dil istemini güncelle
+    if (elements.langPromptText) elements.langPromptText.textContent = dict.lang_prompt_text;
+    if (elements.langPromptYes) elements.langPromptYes.textContent = dict.lang_prompt_yes;
+    if (elements.langPromptNo) elements.langPromptNo.textContent = dict.lang_prompt_no;
+}
+
+/**
+ * Tarayıcı dilini algılar ve uygunsa bir istem gösterir
+ */
+function checkBrowserLanguage() {
+    // Eğer kullanıcı daha önce bir tercih yaptıysa sorma
+    if (localStorage.getItem('lang_prompt_seen')) return;
+
+    const browserLang = navigator.language.split('-')[0]; // 'tr-TR' -> 'tr'
+    const currentLang = state.lang;
+
+    // Eğer tarayıcı dili mevcut dilden farklıysa ve desteklediğimiz bir dilse (tr/en)
+    if (browserLang !== currentLang && (browserLang === 'tr' || browserLang === 'en')) {
+        showLangPrompt(browserLang);
+    }
+}
+
+/**
+ * Dil değiştirme önerisini gösterir
+ * @param {string} suggestedLang - 'tr' | 'en'
+ */
+function showLangPrompt(suggestedLang) {
+    const dict = translations[suggestedLang];
+
+    if (elements.langPromptText) elements.langPromptText.textContent = dict.lang_prompt_text;
+    if (elements.langPromptYes) elements.langPromptYes.textContent = dict.lang_prompt_yes;
+    if (elements.langPromptNo) elements.langPromptNo.textContent = dict.lang_prompt_no;
+
+    // Sadece henüz gösterilmemişse aktifleştir
+    if (!elements.langPrompt.classList.contains('active')) {
+        elements.langPrompt.classList.add('active');
+        // Bir kez gösterildiğinde 'görüldü' olarak işaretle (Kullanıcı etkileşime girmese bile bir daha sormaz)
+        localStorage.setItem('lang_prompt_seen', 'true');
+    }
+
+    // Evet Butonu: Dile geçiş yap
+    const handleYes = () => {
+        updateLanguage(suggestedLang);
+        hideLangPrompt();
+        elements.langPromptYes.removeEventListener('click', handleYes);
+    };
+
+    // Hayır Butonu: Sadece kapat
+    const handleNo = () => {
+        hideLangPrompt();
+        elements.langPromptNo.removeEventListener('click', handleNo);
+    };
+
+    elements.langPromptYes.addEventListener('click', handleYes);
+    elements.langPromptNo.addEventListener('click', handleNo);
+}
+
+/**
+ * Dil istemini kapatır ve kullanıcı tercihini kaydeder
+ */
+function hideLangPrompt() {
+    elements.langPrompt.classList.remove('active');
+    localStorage.setItem('lang_prompt_seen', 'true');
 }
 
 /**
